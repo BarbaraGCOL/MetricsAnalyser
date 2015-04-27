@@ -29,6 +29,7 @@ public class AtualizacaoDAOImpl implements AtualizacaoDAO, Serializable{
         Transaction t = null;
         try {
             t = session.beginTransaction();
+            atualizacao.setId(0);
             session.save(atualizacao);
             session.getTransaction().commit();
         } catch (HibernateException e) {
@@ -53,6 +54,7 @@ public class AtualizacaoDAOImpl implements AtualizacaoDAO, Serializable{
     @Override
     public boolean atualizacaoExiste(Date data, List<Atualizacao>atualizacoes){
         for(Atualizacao a: atualizacoes){
+            System.out.println(a.getData() +" data "+data);
             if(a.getData().equals(data)){
                 return true;
             }

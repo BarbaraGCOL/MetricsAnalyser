@@ -144,6 +144,10 @@ public class ProjetoDAOImpl implements ProjetoDAO, Serializable {
         } finally {
             session.close();
         }
+        if(lista == null || lista.isEmpty()){
+            return new Atualizacao();
+        }
+            
         return lista.get(0);
     }
     
@@ -225,10 +229,9 @@ public class ProjetoDAOImpl implements ProjetoDAO, Serializable {
             if(pacote.getKey() != null){
                 TreeNode documents = new DefaultTreeNode(new Document(pacote.getKey(), "Package"), root);
                 for(String s: (pacotes.get(pacote.getKey()))){
-                   if(s != null && !s.equals("")) 
-                   {
-                       TreeNode work = new DefaultTreeNode(new Document(s, "Source"), documents);
-                   } 
+                    if(s != null && !s.equals("")){
+                        TreeNode work = new DefaultTreeNode(new Document(s, "Source"), documents); 
+                    }
                 }
             }
         }
@@ -236,7 +239,6 @@ public class ProjetoDAOImpl implements ProjetoDAO, Serializable {
         return root;
     }
     
-    @Override
     public List<ValorMetrica> valoresProjeto(Projeto projeto){
         
         List<ValorMetrica> lista = null;
@@ -266,7 +268,6 @@ public class ProjetoDAOImpl implements ProjetoDAO, Serializable {
         return lista;
     }
     
-    @Override
     public List<String> pacotesProjeto(Projeto projeto){
         
         List<String> lista = null;

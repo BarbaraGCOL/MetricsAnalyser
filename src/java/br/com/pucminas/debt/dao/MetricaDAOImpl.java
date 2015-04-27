@@ -29,6 +29,7 @@ public class MetricaDAOImpl implements MetricaDAO, Serializable{
         Transaction t = null;
         try {
             t = session.beginTransaction();
+            metrica.setId(0);
             session.save(metrica);
             session.getTransaction().commit();
         } catch (HibernateException e) {

@@ -177,41 +177,37 @@ public class ProjetoController implements Serializable{
                 date = new Date(val);
                 
                 if(ats == null || !daoAtualiz.atualizacaoExiste(date, ats)){
+                    
                     atualizacao.setData(date);
                     atualizacao.setId(0);
                     metricas = parser.fazerParsing(caminho);
-
-//                    for(Metrica m: metricas){
-//                        for(ValorMetrica v: m.getValores()){
-//                            v.setMetrica(m);
-//                        }
-//                        m.setAtualizacao(atualizacao);
-//                    }
-
                     atualizacao.setMetricas(metricas);
                     atualizacao.setProjeto(projetoSelecionado);
-                    daoAtualiz.salvar(atualizacao);
-//                    
-//                    for(Metrica m: atualizacao.getMetricas()){
-//                        daoMet.salvar(m);
-//                        daoVal.salvar(m.getValores());
-//                    }
-//                    
-//                    if(projetoSelecionado.getAtualizacoes() == null){
-//                        List<Atualizacao>atualizacoes = new ArrayList<>();
-//                        atualizacoes.add(atualizacao);
-//                        projetoSelecionado.setAtualizacoes(atualizacoes);
-//                    }
-//                    else{
-//                        projetoSelecionado.getAtualizacoes().add(atualizacao);
-//                    }
                     
+                    if(projetoSelecionado.getAtualizacoes() == null){
+                        List<Atualizacao>atualizacoes = new ArrayList<>();
+                        atualizacoes.add(atualizacao);
+                        projetoSelecionado.setAtualizacoes(atualizacoes);
+                    }
+                    else{
+                        projetoSelecionado.getAtualizacoes().add(atualizacao);
+                    }
+                    
+                    dao.salvar(projetoSelecionado);
+                    daoAtualiz.salvar(atualizacao);
+                    
+                    for(Metrica m: metricas){
+                        m.setAtualizacao(atualizacao);
+                        daoMet.salvar(m);
+                        for(ValorMetrica v: m.getValores()){
+                            v.setMetrica(m);
+                        }
+                        daoVal.salvar(m.getValores());
+                    }
                     atualizacao = new Atualizacao();
-                    System.out.println("===================================");
                 }
             }
-        } 
-//        dao.salvar(projetoSelecionado);
+        }  
     }
     
     /*Getters e Setters*/

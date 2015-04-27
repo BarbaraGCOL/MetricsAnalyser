@@ -5,13 +5,12 @@
  */
 package br.com.pucminas.debt.model;
 
-import br.com.pucminas.debt.model.Usuario;
 import static br.com.pucminas.debt.pattern.DesignPatterns.SUFIXO_PROJETO;
 import static br.com.pucminas.debt.pattern.DesignPatterns.SUFIXO_USUARIO;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.CascadeType;
-import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.CascadeType.PERSIST;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -53,7 +52,7 @@ public class Projeto implements Serializable{
     inverseJoinColumns = { @JoinColumn(name = "Id" + SUFIXO_USUARIO) })
     private List<Usuario> equipe;
     
-    @OneToMany(cascade=ALL, mappedBy="projeto", fetch = FetchType.EAGER)
+    @OneToMany(cascade=PERSIST, mappedBy="projeto", fetch = FetchType.EAGER)
     List<Atualizacao> atualizacoes;
 
     public int getId() {

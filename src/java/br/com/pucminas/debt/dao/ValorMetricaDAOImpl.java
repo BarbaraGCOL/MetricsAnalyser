@@ -25,12 +25,18 @@ public class ValorMetricaDAOImpl implements ValorMetricaDAO, Serializable{
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction t = null;
         try {
-            t = session.beginTransaction();
+            session.beginTransaction();
             
             for(ValorMetrica val: valoresMetrica){
-                session.save(val);
-                session.getTransaction().commit();
+                if(val.getValor() != null){
+                    val.setId(0);
+                    session.save(val);
+                    session.flush();
+                    session.clear();
+                }
             }
+            session.getTransaction().commit();
+            
         } catch (HibernateException e) {
             if (t != null) {
                 t.rollback();

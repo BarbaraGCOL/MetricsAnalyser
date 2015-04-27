@@ -8,6 +8,8 @@ package br.com.pucminas.debt.model;
 import br.com.pucminas.debt.pattern.DesignPatterns;
 import static br.com.pucminas.debt.pattern.DesignPatterns.SUFIXO_VALOR_METRICA;
 import java.io.Serializable;
+import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.CascadeType.PERSIST;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -43,7 +45,7 @@ public class ValorMetrica implements Serializable{
     @Column(name = "Value_"+SUFIXO_VALOR_METRICA)
     private Float valor;
     
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = PERSIST, fetch = FetchType.LAZY)
     @JoinColumn(name = "Id_" + DesignPatterns.SUFIXO_METRICA, nullable = false)
     private Metrica metrica;
     

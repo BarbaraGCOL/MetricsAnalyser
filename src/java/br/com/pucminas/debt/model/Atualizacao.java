@@ -11,6 +11,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.CascadeType.PERSIST;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -33,7 +34,7 @@ import javax.persistence.TemporalType;
 public class Atualizacao implements Serializable{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name= "Id_"+SUFIXO_ATUALIZACAO, nullable = false, unique = true)
     private int id;
     
@@ -41,11 +42,11 @@ public class Atualizacao implements Serializable{
     @Temporal(TemporalType.TIMESTAMP) 
     private Date data;
     
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = PERSIST, fetch = FetchType.LAZY)
     @JoinColumn(name = "Id_"+SUFIXO_PROJETO, nullable = false)
     private Projeto projeto;
 
-    @OneToMany( cascade = ALL, mappedBy="atualizacao")
+    @OneToMany( cascade = PERSIST, mappedBy="atualizacao")
     private List<Metrica> metricas;
     
     public int getId() {

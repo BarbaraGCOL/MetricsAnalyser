@@ -10,6 +10,7 @@ import static br.com.pucminas.debt.pattern.DesignPatterns.SUFIXO_METRICA;
 import java.io.Serializable;
 import java.util.List;
 import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.CascadeType.PERSIST;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -32,18 +33,18 @@ import javax.persistence.Table;
 public class Metrica implements Serializable{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="Id_"+SUFIXO_METRICA, nullable = false,unique = true)
     private int id;
     
     @Enumerated(EnumType.STRING) 
     private TipoMetrica tipo;
     
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = PERSIST, fetch = FetchType.LAZY)
     @JoinColumn(name = "Id_" + SUFIXO_ATUALIZACAO, nullable = false)
     private Atualizacao atualizacao;
     
-    @OneToMany(mappedBy="metrica", cascade = ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy="metrica", cascade = PERSIST, fetch = FetchType.EAGER)
     List<ValorMetrica>valores;
  
     public int getId() {
