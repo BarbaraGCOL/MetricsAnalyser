@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"  
+                xmlns:ui="http://java.sun.com/jsf/facelets"    
+                xmlns:p="http://primefaces.org/ui"  
+                xmlns:f="http://java.sun.com/jsf/core"  
+                template="/templates/templateLogin.xhtml">  
+    <ui:define name="metadata">  
+    </ui:define>  
+    <ui:define name="content">
+        <p:dialog header="Acesso Negado!"
+                  modal="true"
+                  closable="true"
+                  position="center"
+                  widgetVar="modalNegado"
+                  minWidth="300"
+                  width="300"
+                  showEffect="shake" 
+                  draggable="true"
+                  resizable="true"
+                  visible="true">
+
+            <center>
+
+                <img src="#{facesContext.externalContext.requestContextPath}/resources/img/acesso_negado.gif" />
+                <br />
+                <br />                        
+                <p:outputLabel value="Sentimos muito,"/>
+                <br/>
+                <p:outputLabel value="mas você não tem permissão de acesso para essa página!"/>
+                <br />
+                <br />
+                <br />	   		    	  	   		    	  	 
+                <a href="#{facesContext.externalContext.requestContextPath}/usuario/estorias.jsf">
+                    Voltar 
+                </a>	   		    	  	 
+
+            </center>
+
+        </p:dialog>	
+    </ui:define>
+</ui:composition>

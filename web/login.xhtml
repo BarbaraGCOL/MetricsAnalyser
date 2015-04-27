@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"  
+                xmlns:ui="http://java.sun.com/jsf/facelets"  
+                xmlns:h="http://java.sun.com/jsf/html"  
+                xmlns:p="http://primefaces.org/ui"  
+                xmlns:f="http://java.sun.com/jsf/core"  
+                template="/templates/templateLogin.xhtml">  
+    <ui:define name="metadata">  
+    </ui:define>  
+    <ui:define name="content">
+        <style type="text/css">
+            .button-image {
+                background: transparent url(#{facesContext.externalContext.requestContextPath}/resources/img/login5.png) no-repeat left;
+                display: inline-block; 
+                position: relative; 
+                padding: 0; 
+                margin-right: .1em; 
+                text-decoration: none !important; 
+                cursor: pointer; 
+                text-align: center; 
+                zoom: 1; 
+                overflow: visible;
+                color: #8B4726;
+            }
+        </style>
+        <br></br><br></br>
+        <p:dialog header="Login" visible="true" closable="false" draggable="false" resizable="false" width="300" style="min-height: 95px;">
+            <center>
+                <h3><p:outputLabel value="Usuário e/ou senha incorretos!" rendered="#{param.erro}" style="color: darkred"/></h3>
+            </center>
+            <form id="form" action="j_spring_security_check" method="post">
+                <center>
+                    <h:panelGrid columns="1" cellpadding="5">
+                        <h:panelGrid columns="2" cellpadding="5">
+                            <p:outputLabel for="j_username" value="#{msg['login.usuario']}:"/> 
+                            <p:inputText id="j_username" required="true" requiredMessage="O campo Login deve ser preenchido!"/>
+                            <p:outputLabel for="j_password" value="#{msg['login.senha']}:&#160;&#160;"/>
+                            <p:password id="j_password" required="true" requiredMessage="O campo Senha deve ser preenchido!"/>
+                        </h:panelGrid>
+                        <h:commandButton value="&#160;&#160;&#160;&#160;#{msg['login.entrar']}" styleClass="button-image" title="Logar no sistema"/>
+                        <!--<p:commandButton icon="ui-icon-unlocked" value="Entrar" styleClass="button-no-border-right" title="Logar no sistema"/>-->
+                    </h:panelGrid>
+                </center>
+                <p:watermark for="j_username" value="Login do usuário"/>  
+                <p:watermark for="j_password" value="Senha do usuário"/>  
+            </form>
+        </p:dialog>
+    </ui:define>
+</ui:composition>

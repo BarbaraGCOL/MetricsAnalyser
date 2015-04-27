@@ -1,0 +1,90 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <f:view contentType="text/html">
+
+        <h:head>
+            <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+            <link rel="stylesheet" type="text/css" href="#{facesContext.externalContext.requestContextPath}/pepper-grinder/theme.css" media="screen" />
+            <title>Debt Analyser</title>
+            <ui:insert name="head"></ui:insert>
+            <style type="text/css">
+                .new {
+                    background: url(#{facesContext.externalContext.requestContextPath}/new.png) no-repeat;
+                }
+
+                .search {
+                    background: url(#{facesContext.externalContext.requestContextPath}/search.png) no-repeat;
+                }
+                .banner
+                {
+                    background: url(#{facesContext.externalContext.requestContextPath}/resources/img/header.jpg) no-repeat;
+                    height: 160px;
+                    margin-bottom: 5px;
+                    text-align: center;
+                }
+                
+            </style>
+        </h:head>
+
+        <h:body>
+            <div class="outer-container">
+
+                <div class="inner-container">
+
+                    <div class="header">
+                        <h:panelGrid columns="1" styleClass="logado">
+                            <h:outputLink value="#{facesContext.externalContext.requestContextPath}/publico/ajuda.jsf"
+                                          title="Ajuda" styleClass="sair">
+                                <h:graphicImage value="/resources/img/icon_ajuda.png"/>
+                            </h:outputLink>
+                        </h:panelGrid>    
+                        <div class="title">
+                            <span class="sitename"><a>Debt Analyser</a></span>
+                            <div class="slogan">Sistema de Análise de Dívida Técnica em Projetos</div>
+                        </div>
+                    </div>
+
+
+                    <div class="main">
+                        <br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br>
+                        <div class="content">
+                            <br></br><br></br>
+                            <ui:insert name="content">
+                                <br/><br/>
+                            </ui:insert>
+                        </div>
+
+                        <div class="clearer"></div>
+
+                    </div>
+
+                    <div class="footer">
+                        <center><span>Powered by <a href="http://pucminas.br/destaques/">PUC Minas - Unidade Barreiro</a></span> </center>
+                        <!--<span class="right">
+                                <p:ajaxStatus>
+                                        <f:facet name="start">
+                                                <h:graphicImage value="img/ajax-loader.gif" />
+                                        </f:facet>
+                                        
+                                        <f:facet name="complete">
+                                                Status
+                                        </f:facet>
+                                </p:ajaxStatus>
+                         </span>-->
+
+                        <div class="clearer"></div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </h:body>
+    </f:view>
+
+</html>

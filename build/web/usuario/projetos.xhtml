@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"  
+                xmlns:ui="http://java.sun.com/jsf/facelets"  
+                xmlns:h="http://java.sun.com/jsf/html"  
+                xmlns:p="http://primefaces.org/ui"  
+                xmlns:f="http://java.sun.com/jsf/core"  
+                template="/templates/template.xhtml">  
+
+    <ui:define name="cabecalho">
+        <span><a><p:outputLabel value="#{msg['projeto.titulo.listagem']}"/></a></span> 
+    </ui:define>
+    <ui:define name="content">
+        <h:form id="form">
+            <p:commandButton value="Novo Projeto" update=":form:infosProjeto" oncomplete="PF('projetoDialog').show();" actionListener="#{projetoController.prepararAdicionarProjeto}" styleClass="button-no-border-right" icon="ui-icon-plusthick" title="Adicionar novo Projeto"/>
+            <br/><br/>
+            <p:dataTable id="tabela" var="projeto" value="#{projetoController.listarProjetos}" 
+                         selection="#{projetoController.projeto}" paginator="true" rows="10" widgetVar="tabelaProjetos" 
+                         selectionMode="single" rowKey="#{projeto.nome}" emptyMessage="Projeto não encontrada!">
+                <p:growl id="growl" showDetail="true" sticky="true" /> 
+                <p:ajax event="rowSelect" update=":form:infosProjeto" oncomplete="projetoDialog.show()" />  
+                <p:column filterBy="#{projeto.id}" sortBy="#{projeto.id}" style="text-align: center; white-space:normal !important;">
+                    <f:facet name="header">
+                        <h:outputText value="#{msg['projeto.id']}"/>
+                    </f:facet>
+                    <h:outputText value="#{projeto.id}" />
+                </p:column>
+                <p:column filterBy="#{projeto.nome}" sortBy="#{projeto.nome}" style="text-align: center; white-space:normal !important;">
+                    <f:facet name="header">
+                        <h:outputText value="#{msg['projeto.nome']}"/>
+                    </f:facet>
+                    <h:outputText value="#{projeto.nome}" />
+                </p:column>
+                <p:column filterBy="#{projeto.descricao}" sortBy="#{projeto.descricao}" style="text-align: center; white-space:normal !important;">
+                    <f:facet name="header">
+                        <h:outputText value="#{msg['projeto.descricao']}"/>
+                    </f:facet>
+                    <h:outputText value="#{projeto.descricao}"/>
+                </p:column>
+               <p:column width="120">
+                    <p:commandButton icon="ui-icon-pencil" styleClass="button-no-border-icon" oncomplete="PF('projetoDialog').show();" title="Alterar Projeto" update=":form:infosProjeto" actionListener="#{projetoController.prepararAlterarProjeto}"/>
+                    <p:commandButton icon="ui-icon-trash" styleClass="button-no-border-icon" actionListener="#{projetoController.excluirProjeto}" onclick="return confirm('Excluir Projeto?');" title="Excluir Projeto" update="growl"/>
+                    <p:commandButton icon="ui-icon-circle-zoomin" styleClass="button-no-border-icon" oncomplete="PF('projetoDialog').show();" title="Visualizar Projeto" update=":form:infosProjeto" actionListener="#{projetoController.prepararAlterarProjeto}"/>
+                    <p:commandButton icon="ui-icon-bookmark" styleClass="button-no-border-icon" title="Estrutura do Projeto" action="#{projetoController.redirecionaAtualizacoesProjeto}" ajax="false"/>
+                </p:column>
+            </p:dataTable>
+            <p:dialog header="Lista de Projetos" widgetVar="projetoDialog" resizable="false" showEffect="slide" 
+                      hideEffect="slide" draggable="false" modal="true" focus="nome">  
+                <p:growl id="growl2" showDetail="true" sticky="true"/> 
+                <h:panelGrid id="infosProjeto" columns="2"> 
+                    <h:inputHidden value="ID:"/>
+                    <h:inputHidden value="#{projetoController.projeto.id}"/>
+                    <h:inputHidden value="Nome:"/>
+                    <h:inputHidden value="#{projetoController.projeto.nome}"/>
+                    <p:outputLabel value="#{msg['projeto.id']}" />  
+                    <p:inputText value="#{projetoController.projeto.id}" id="id" disabled="true"/>  
+                    <p:outputLabel value="#{msg['projeto.nome']}:" />  
+                    <p:inputText value="#{projetoController.projeto.nome}" id="nome" disabled="#{not empty projetoController.projeto.nome}"/>  
+                    <p:outputLabel value="#{msg['projeto.descricao']}:" />  
+                    <p:inputTextarea value="#{projetoController.projeto.descricao}" id="desc"/>  
+                    <p:commandButton icon="ui-icon-disk" oncomplete="PF('projetoDialog').hide();" actionListener="#{projetoController.adicionarProjeto}" ajax="false" value="#{msg['projeto.salvar']}" />
+                    <p:commandButton icon="ui-icon-disk" oncomplete="PF('projetoDialog').hide();" actionListener="#{projetoController.alterarProjeto}" ajax="false" value="#{msg['projeto.atualizar']}" />
+
+                    <p:watermark for="nome" value="Nome da projeto de usuário"/>
+                    <p:watermark for="desc" value="Descrição da projeto de usuário"/>
+                </h:panelGrid>
+            </p:dialog>
+        </h:form>
+    </ui:define>
+</ui:composition>

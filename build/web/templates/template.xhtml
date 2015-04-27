@@ -1,0 +1,106 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <f:view contentType="text/html">
+
+        <h:head>
+            <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+            <link rel="stylesheet" type="text/css" href="#{facesContext.externalContext.requestContextPath}/pepper-grinder/theme.css" media="screen" />
+            <title>Debt Analyser</title>
+            <ui:insert name="head"></ui:insert>
+            <style type="text/css">
+                .new {
+                    background: url(#{facesContext.externalContext.requestContextPath}/resources/img/new.png) no-repeat;
+                }
+
+                .search {
+                    background: url(#{facesContext.externalContext.requestContextPath}/resources/img/search.png) no-repeat;
+                }
+                .banner
+                {
+                    background: url(#{facesContext.externalContext.requestContextPath}/resources/img/header.jpg) no-repeat;
+                    height: 160px;
+                    margin-bottom: 5px;
+                    text-align: center;
+                }
+                
+            </style>
+        </h:head>
+
+        <h:body>
+            <div class="outer-container">
+
+                <div class="inner-container">
+                    <div class="header">
+                        <h:panelGrid columns="3" styleClass="logado">
+                            <h:outputLink value="#{facesContext.externalContext.requestContextPath}/publico/ajuda.jsf"
+                                          title="Ajuda" styleClass="sair">
+                                <h:graphicImage value="/resources/img/icon_ajuda.png"/>
+                            </h:outputLink>
+                            <h:outputLink value=" #{facesContext.externalContext.requestContextPath}/j_spring_security_logout" 
+                                          title="Sair" styleClass="sair">
+                                <h:graphicImage value="/resources/img/icon_sair.png"/>
+                            </h:outputLink>
+                            <h:outputText value="Bem-Vindo #{usuarioController.usuarioLogado.login}!" styleClass="logado"/>
+                        </h:panelGrid>    
+                        <div class="title">
+                            <span class="sitename"><a>Debt Analyser</a></span>
+                            <div class="slogan">Sistema de Análise de Dívida Técnica em Projetos</div>
+                        </div>
+                    </div>
+                    
+                    <p:menubar id="menu">
+                        <p:submenu label="Projetos" >
+                            <p:menuitem value="Projetos Cadastrados" url="/usuario/projetos.jsf"/>
+                        </p:submenu>
+                    </p:menubar>
+                    <div class="cabecalho">
+                        <ui:insert name="cabecalho">
+                        </ui:insert>
+                    </div>
+                    <div class="main">
+                        <br></br>
+                        <div class="content">
+                            <ui:insert name="content">
+                            </ui:insert>
+                        </div>
+
+                        <div class="clearer"></div>
+
+                    </div>
+                    <br></br>
+                    <div class="footer">
+                        <center>
+                            <span>Powered by <a href="http://pucminas.br/destaques/">PUC Minas - Unidade Barreiro</a></span> 
+                            <h:outputLink value="#top" title="Ir para o Topo" styleClass="button-no-border-right">
+                                <p:graphicImage url="/resources/img/top3.png"/>
+                            </h:outputLink>
+                        </center>
+                        <!--<span class="right">
+                                <p:ajaxStatus>
+                                        <f:facet name="start">
+                                                <h:graphicImage value="img/ajax-loader.gif" />
+                                        </f:facet>
+                                        
+                                        <f:facet name="complete">
+                                                Status
+                                        </f:facet>
+                                </p:ajaxStatus>
+                         </span>-->
+
+                        <div class="clearer"></div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </h:body>
+    </f:view>
+
+</html>
+
