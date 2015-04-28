@@ -39,41 +39,44 @@ public class MindmapView implements Serializable {
     }
  
     public MindmapNode mapProjeto(Projeto projeto) {
-        System.out.println(projeto);
-        if(this.projeto == null || projeto.getId() != this.projeto.getId() || root == null){
-
-            this.projeto = projeto;
-
-            root = new DefaultMindmapNode("Projeto " + projeto.getNome(), "Projeto", "FFCC00", false);
-
-            ProjetoDAO daoProj = new ProjetoDAOImpl();
-            List<String>pacotesProjeto = daoProj.pacotesProjeto(projeto);
-            MindmapNode pacote = null;
-            MindmapNode metrica = null;
-
-            MindmapNode pacotes = new DefaultMindmapNode("Packages", "Pacotes Projeto", "6e9ebf", true);
-
-            for(String pack: pacotesProjeto){
-                if(pack!=null){
-                    pacote = new DefaultMindmapNode(pack, pack, "82c542", true);
-                    pacotes.addNode(pacote);
-                }
-            }
-
-            MindmapNode metricasGerais = new DefaultMindmapNode("Métricas", "Métricas do Projeto", "6e9ebf", true);
-
-            List<Metrica>metricasProjeto = daoProj.metricasProjeto(daoProj.ultimaAtualizacao(projeto));
-
-            for(Metrica m: metricasProjeto){
-                if(!m.getValores().isEmpty()){
-                    metrica = new DefaultMindmapNode(m.getTipo().name(), m.getValores().get(0).getValor(), "82c542", true);
-                    metricasGerais.addNode(metrica);
-                }
-            }
-
-            root.addNode(pacotes);
-            root.addNode(metricasGerais);
-        }
+//        System.out.println(projeto);
+//        if(this.projeto == null || projeto.getId() != this.projeto.getId() || root == null){
+//
+//            this.projeto = projeto;
+//
+//            root = new DefaultMindmapNode("Projeto " + projeto.getNome(), "Projeto", "FFCC00", false);
+//
+//            ProjetoDAO daoProj = new ProjetoDAOImpl();
+//            List<String>pacotesProjeto = daoProj.pacotesProjeto(projeto);
+//            MindmapNode pacote = null;
+//            MindmapNode metrica = null;
+//
+//            MindmapNode pacotes = new DefaultMindmapNode("Packages", "Pacotes Projeto", "6e9ebf", true);
+//
+//            for(String pack: pacotesProjeto){
+//                if(pack!=null){
+//                    pacote = new DefaultMindmapNode(pack, pack, "82c542", true);
+//                    pacotes.addNode(pacote);
+//                }
+//            }
+//
+////            MindmapNode metricasGerais = new DefaultMindmapNode("Métricas", "Métricas do Projeto", "6e9ebf", true);
+//
+//            List<Metrica>metricasProjeto = daoProj.metricasProjeto(daoProj.ultimaAtualizacao(projeto));
+//
+////            for(Metrica m: metricasProjeto){
+////                if(!m.getValores().isEmpty()){
+////                    metrica = new DefaultMindmapNode(m.getTipo().name(), m.getValores().get(0).getValor(), "82c542", true);
+////                    metricasGerais.addNode(metrica);
+////                }
+////            }
+//
+//            root.addNode(pacotes);
+////            root.addNode(metricasGerais);
+//        }
+        
+        ProjetoDAO dao = new ProjetoDAOImpl();
+        root = dao.estruturaProjeto(projeto);
         return root;
     }
     

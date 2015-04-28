@@ -18,7 +18,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import org.hibernate.HibernateException;
@@ -27,6 +26,8 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
+import org.primefaces.model.mindmap.DefaultMindmapNode;
+import org.primefaces.model.mindmap.MindmapNode;
 
 /**
  *
@@ -295,5 +296,96 @@ public class ProjetoDAOImpl implements ProjetoDAO, Serializable {
         
         
         return lista;
+    }
+    
+    public MindmapNode estruturaProjeto(Projeto projeto){
+        Map<String, List<String>> pacotes = new HashMap<String, List<String>>();
+        Map<String, List<String>> classes = new HashMap<String, List<String>>();
+        
+//       Atualizacao ultimaAtualizacao = ultimaAtualizacao(projeto);
+        
+        List<ValorMetrica> lista = null;
+        
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        Transaction t = null;
+        
+        try {
+            t = session.beginTransaction();
+                
+            Query query = session.createQuery("select distinct v from ValorMetrica v "
+                    + "inner join v.metrica m "
+                    + "inner join m.atualizacao a "
+                    + "where a.id = (select max(id) "
+                    + "from Atualizacao "
+                    + "where projeto.id = " + projeto.getId() + ")");
+            
+            lista = (ArrayList<ValorMetrica>) query.list();
+            session.getTransaction().commit();
+        } catch (HibernateException e) {
+            if (t != null) {
+                t.rollback();
+            }
+        } finally {
+            session.close();
+        }
+        
+        for(ValorMetrica val: lista){
+            System.out.println("Métrica: "+val.getName());
+            String [] s = (val.getSource().split("."));
+            if(val.getName() != null && val.getName().equals(val.getPack())){
+                if(pacotes.get(val.getPack()) == null){
+                    pacotes.put(val.getPack(), new ArrayList<>());
+                }
+            }
+            else
+                if(val.getName() != null && s.length == 2 && s[0].equals(val.getName())){
+                    if(pacotes.get(val.getPack()) == null){
+                        List<String>classesPack = new ArrayList<>();
+                        classesPack.add(val.getSource());
+                        pacotes.put(val.getPack(), classesPack);
+                    }  
+                    else{
+                        pacotes.get(val.getPack()).add(val.getSource());
+                    }
+                }
+                else{
+                    if(val.getName() != null && classes.get(val.getSource()) == null){
+                        List<String>metodosPack = new ArrayList<>();
+                        metodosPack.add(val.getName());
+                        classes.put(val.getSource(), metodosPack);
+                    }
+                    else{
+                        classes.get(val.getSource()).add(val.getName());
+                    }
+                }
+        }
+        
+        MindmapNode root;
+        
+        root = new DefaultMindmapNode("Projeto " + projeto.getNome(), "Projeto", "FFCC00", false);
+        
+        MindmapNode pacotesProj = new DefaultMindmapNode("Packages", "Pacotes Projeto", "6e9ebf", true);
+
+        MindmapNode pacote = null;
+        MindmapNode classe = null;
+        MindmapNode metodo = null;
+        
+        for(Map.Entry<String, List<String>> pack : pacotes.entrySet()){
+            pacote = new DefaultMindmapNode(pack.getKey(), pack.getKey(), "82c542", true);
+            for(String c: pack.getValue()){
+                classe = new DefaultMindmapNode(c, c, "fce24f", true);
+                
+                for(String m: classes.get(c)){
+                    metodo = new DefaultMindmapNode(m, m, "FFCC00", true);
+                    classe.addNode(metodo);
+                }
+                pacote.addNode(classe);
+            }
+            pacotesProj.addNode(pacote);
+        }
+            
+        root.addNode(pacotesProj);
+        
+        return root;
     }
 }

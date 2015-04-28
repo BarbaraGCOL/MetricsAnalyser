@@ -12,6 +12,7 @@ import br.com.pucminas.debt.model.Projeto;
 import br.com.pucminas.debt.model.ValorMetrica;
 import java.util.List;
 import org.primefaces.model.TreeNode;
+import org.primefaces.model.mindmap.MindmapNode;
 
 /**
  *
@@ -27,4 +28,5 @@ public interface ProjetoDAO {
     public TreeNode arvoreProjeto(Projeto projeto);
     public List<ValorMetrica> valoresProjeto(Projeto projeto);
     public List<String> pacotesProjeto(Projeto projeto);
+    public MindmapNode estruturaProjeto(Projeto projeto);
 }
