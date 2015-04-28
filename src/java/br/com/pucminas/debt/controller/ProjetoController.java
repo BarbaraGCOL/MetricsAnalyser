@@ -34,6 +34,7 @@ import javax.faces.event.ActionEvent;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
+import javax.faces.model.SelectItem;
 import org.primefaces.model.TreeNode;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -65,7 +66,11 @@ public class ProjetoController implements Serializable{
     private String loginUsuario = ((SecurityContext) SecurityContextHolder.getContext()).getAuthentication().getName();
     private Usuario usuarioLogado = daoUsu.buscaLogin(loginUsuario);
 
+    private ArrayList<SelectItem>opcoes;
+    private String opcao = "Árvore";
     
+    private List<ValorMetrica>valoresSelection;
+
     public ProjetoController() {
 
     }
@@ -75,6 +80,12 @@ public class ProjetoController implements Serializable{
        
     }
 
+    public void loadOpcoes(){
+        opcoes = new ArrayList<>();
+        opcoes.add(new SelectItem("Árvore", "Árvore"));
+        opcoes.add(new SelectItem("Tabela", "Tabela"));
+    }
+    
     public Projeto getProjeto() {
         if (projeto == null) {
             projeto = new Projeto();
@@ -207,7 +218,7 @@ public class ProjetoController implements Serializable{
                     atualizacao = new Atualizacao();
                 }
             }
-        }  
+        } 
     }
     
     /*Getters e Setters*/
@@ -292,5 +303,37 @@ public class ProjetoController implements Serializable{
  
     public void setSelectedDocument(Document selectedDocument) {
         this.selectedDocument = selectedDocument;
+    }
+    
+    public ArrayList<SelectItem> getOpcoes() {
+        if(opcoes == null){
+            loadOpcoes();
+        }
+        return opcoes;
+    }
+
+    public void setOpcoes(ArrayList<SelectItem> opcoes) {
+        this.opcoes = opcoes;
+    }
+    
+    public String getOpcao() {
+        return opcao;
+    }
+
+    public void setOpcao(String opcao) {
+        this.opcao = opcao;
+    }
+    
+    public List<ValorMetrica> buscaValoresSelection(String selection){
+        valoresSelection = dao.metricasFile(projetoSelecionado, selection);
+        return getValoresSelection();
+    }
+    
+    public List<ValorMetrica> getValoresSelection() {
+        return valoresSelection;
+    }
+
+    public void setValoresSelection(ArrayList<ValorMetrica> valoresSelection) {
+        this.valoresSelection = valoresSelection;
     }
 }

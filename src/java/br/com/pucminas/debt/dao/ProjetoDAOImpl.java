@@ -7,10 +7,8 @@ package br.com.pucminas.debt.dao;
 
 import br.com.pucminas.debt.model.Atualizacao;
 import br.com.pucminas.debt.model.Document;
-import br.com.pucminas.debt.model.Metrica;
 import br.com.pucminas.debt.util.HibernateUtil;
 import br.com.pucminas.debt.model.Projeto;
-import br.com.pucminas.debt.model.TipoMetrica;
 import br.com.pucminas.debt.model.ValorMetrica;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -18,6 +16,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import org.hibernate.HibernateException;
@@ -129,8 +128,6 @@ public class ProjetoDAOImpl implements ProjetoDAO, Serializable {
 
         try {
             t = session.beginTransaction();
-            //Query query = session.createQuery("from Atualizacao");
-            
             Query query = session.createQuery("from Atualizacao a "
                     + "where a.id = (select max(id) "
                     + "from Atualizacao "
@@ -153,86 +150,19 @@ public class ProjetoDAOImpl implements ProjetoDAO, Serializable {
     }
     
     @Override
-    public List<Metrica> metricasProjeto(Atualizacao atualizacao){
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        Transaction t = null;
-        List<Metrica> lista = new ArrayList<Metrica>();
-
-        try {
-            t = session.beginTransaction();
-            //Query query = session.createQuery("from Atualizacao");
-            
-            Query query = session.createQuery("from Metrica m "
-                    + "where m.atualizacao.id = "+atualizacao.getId()
-                    + " and m.tipo in ('" + TipoMetrica.CE+ "','"+
-                    TipoMetrica.NOC + "', '" + TipoMetrica.RMA  + "', '" + 
-                    TipoMetrica.RMD + "', '" + TipoMetrica.NOI  + "', '" + 
-                    TipoMetrica.TLOC + "', '" + TipoMetrica.NOP + "', '" + 
-                    TipoMetrica.RMI + "', '" + TipoMetrica.CA + "')");
-            
-            lista = (ArrayList<Metrica>) query.list();
-            session.getTransaction().commit();
-        } catch (HibernateException e) {
-            if (t != null) {
-                t.rollback();
-            }
-        } finally {
-            session.close();
-        }
-        return lista;
-    }
-    
-    @Override
     public TreeNode arvoreProjeto(Projeto projeto){
+        Map<String, Set<String>>pacotesProj = new HashMap<>();
+        Map<String, Set<String>>classesProj = new HashMap<>();
         
-        TreeNode root = new DefaultTreeNode(new Document("Files", "Package"), null);
-        List<ValorMetrica> lista = null;
-        HashMap<String, HashSet<String>>pacotes = new HashMap<>();
+        estruturaProjeto(pacotesProj, classesProj, projeto);
         
-        
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        Transaction t = null;
-        
-        try {
-            t = session.beginTransaction();
-                
-            Query query = session.createQuery("select v from ValorMetrica v "
-                    + "inner join v.metrica m "
-                    + "inner join m.atualizacao a "
-                    + "where a.projeto.id = "+projeto.getId());
-            
-           lista = (ArrayList<ValorMetrica>) query.list();
-            session.getTransaction().commit();
-        } catch (HibernateException e) {
-            if (t != null) {
-                t.rollback();
-            }
-        } finally {
-            session.close();
-        }
-        
-        String pack, source;
-        HashSet<String>sources;
-        for(ValorMetrica v: lista){
-            pack = v.getPack();
-        
-            if(pacotes.containsKey(pack)){
-                pacotes.get(pack).add(v.getSource());
-            }
-            else{
-                sources = new HashSet<String>();
-                sources.add(v.getSource());
-                pacotes.put(v.getPack(), sources);
-            }
-        }
-
-        for(Map.Entry<String, HashSet<String>> pacote : pacotes.entrySet()){
-            if(pacote.getKey() != null){
-                TreeNode documents = new DefaultTreeNode(new Document(pacote.getKey(), "Package"), root);
-                for(String s: (pacotes.get(pacote.getKey()))){
-                    if(s != null && !s.equals("")){
-                        TreeNode work = new DefaultTreeNode(new Document(s, "Source"), documents); 
-                    }
+        TreeNode root = new DefaultTreeNode(new Document("Files", "Pacote"), null);
+        for(Map.Entry<String, Set<String>> pack : pacotesProj.entrySet()){
+            TreeNode pacotes = new DefaultTreeNode(new Document(pack.getKey(), "Pacote"), root);
+            for(String c: pacotesProj.get(pack.getKey())){
+                TreeNode classes = new DefaultTreeNode(new Document(c, "Classe"), pacotes); 
+                for(String m: classesProj.get(c)){
+                    TreeNode metodos = new DefaultTreeNode(new Document(m, "Método"), classes); 
                 }
             }
         }
@@ -240,6 +170,7 @@ public class ProjetoDAOImpl implements ProjetoDAO, Serializable {
         return root;
     }
     
+    @Override
     public List<ValorMetrica> valoresProjeto(Projeto projeto){
         
         List<ValorMetrica> lista = null;
@@ -251,68 +182,6 @@ public class ProjetoDAOImpl implements ProjetoDAO, Serializable {
             t = session.beginTransaction();
                 
             Query query = session.createQuery("select v from ValorMetrica v "
-                    + "inner join v.metrica m "
-                    + "inner join m.atualizacao a "
-                    + "where a.projeto.id = "+projeto.getId());
-            
-            lista = (ArrayList<ValorMetrica>) query.list();
-            session.getTransaction().commit();
-        } catch (HibernateException e) {
-            if (t != null) {
-                t.rollback();
-            }
-        } finally {
-            session.close();
-        }
-        
-        
-        return lista;
-    }
-    
-    public List<String> pacotesProjeto(Projeto projeto){
-        
-        List<String> lista = null;
-        
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        Transaction t = null;
-        
-        try {
-            t = session.beginTransaction();
-                
-            Query query = session.createQuery("select distinct v.pack from ValorMetrica v "
-                    + "inner join v.metrica m "
-                    + "inner join m.atualizacao a "
-                    + "where a.projeto.id = "+projeto.getId());
-            
-            lista = (ArrayList<String>) query.list();
-            session.getTransaction().commit();
-        } catch (HibernateException e) {
-            if (t != null) {
-                t.rollback();
-            }
-        } finally {
-            session.close();
-        }
-        
-        
-        return lista;
-    }
-    
-    public MindmapNode estruturaProjeto(Projeto projeto){
-        Map<String, List<String>> pacotes = new HashMap<String, List<String>>();
-        Map<String, List<String>> classes = new HashMap<String, List<String>>();
-        
-//       Atualizacao ultimaAtualizacao = ultimaAtualizacao(projeto);
-        
-        List<ValorMetrica> lista = null;
-        
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        Transaction t = null;
-        
-        try {
-            t = session.beginTransaction();
-                
-            Query query = session.createQuery("select distinct v from ValorMetrica v "
                     + "inner join v.metrica m "
                     + "inner join m.atualizacao a "
                     + "where a.id = (select max(id) "
@@ -329,63 +198,101 @@ public class ProjetoDAOImpl implements ProjetoDAO, Serializable {
             session.close();
         }
         
-        for(ValorMetrica val: lista){
-            System.out.println("Métrica: "+val.getName());
-            String [] s = (val.getSource().split("."));
-            if(val.getName() != null && val.getName().equals(val.getPack())){
-                if(pacotes.get(val.getPack()) == null){
-                    pacotes.put(val.getPack(), new ArrayList<>());
-                }
-            }
-            else
-                if(val.getName() != null && s.length == 2 && s[0].equals(val.getName())){
-                    if(pacotes.get(val.getPack()) == null){
-                        List<String>classesPack = new ArrayList<>();
-                        classesPack.add(val.getSource());
-                        pacotes.put(val.getPack(), classesPack);
-                    }  
-                    else{
-                        pacotes.get(val.getPack()).add(val.getSource());
-                    }
-                }
-                else{
-                    if(val.getName() != null && classes.get(val.getSource()) == null){
-                        List<String>metodosPack = new ArrayList<>();
-                        metodosPack.add(val.getName());
-                        classes.put(val.getSource(), metodosPack);
-                    }
-                    else{
-                        classes.get(val.getSource()).add(val.getName());
-                    }
-                }
-        }
         
-        MindmapNode root;
-        
-        root = new DefaultMindmapNode("Projeto " + projeto.getNome(), "Projeto", "FFCC00", false);
-        
-        MindmapNode pacotesProj = new DefaultMindmapNode("Packages", "Pacotes Projeto", "6e9ebf", true);
+        return lista;
+    }
+    
+    @Override
+    public MindmapNode mapaProjeto(Map<String, Set<String>>pacotesProj, Map<String, Set<String>>classesProj, Projeto projeto){        
+        MindmapNode root = new DefaultMindmapNode("Projeto " + projeto.getNome(), "Projeto", "FFCC00", false);
 
-        MindmapNode pacote = null;
-        MindmapNode classe = null;
-        MindmapNode metodo = null;
+        MindmapNode pacote, classe, metodo;
         
-        for(Map.Entry<String, List<String>> pack : pacotes.entrySet()){
-            pacote = new DefaultMindmapNode(pack.getKey(), pack.getKey(), "82c542", true);
-            for(String c: pack.getValue()){
-                classe = new DefaultMindmapNode(c, c, "fce24f", true);
-                
-                for(String m: classes.get(c)){
-                    metodo = new DefaultMindmapNode(m, m, "FFCC00", true);
-                    classe.addNode(metodo);
+        for(Map.Entry<String, Set<String>> pack : pacotesProj.entrySet()){
+            if(pack.getKey() != null){
+                pacote = new DefaultMindmapNode(pack.getKey(), pack.getKey(), "6e9ebf", true);
+                 
+                for(String c: pack.getValue()){
+                    classe = new DefaultMindmapNode(c, c, "82c542", true);
+                    for(String m: classesProj.get(c)){
+                        metodo = new DefaultMindmapNode(m, m, "BC8F8F", true);
+                        classe.addNode(metodo);
+                    }
+                    pacote.addNode(classe);
                 }
-                pacote.addNode(classe);
+                root.addNode(pacote);
             }
-            pacotesProj.addNode(pacote);
         }
-            
-        root.addNode(pacotesProj);
         
         return root;
+    }
+    
+    @Override
+    public void estruturaProjeto(Map<String, Set<String>>pacotesProj, Map<String, Set<String>>classesProj, Projeto projeto){
+        List<ValorMetrica> valoresProj = valoresProjeto(projeto);
+        
+        for(ValorMetrica val: valoresProj){
+            if(val != null && val.getSource() != null){
+                String []nameClass = val.getSource().split("\\.");
+                if(val.getName().equals(val.getPack())){
+                    if(pacotesProj.get(val.getPack()) == null){
+                        pacotesProj.put(val.getPack(), new HashSet<>());
+                    }
+                }
+                else
+                    if(nameClass.length == 2 && nameClass[0].equals(val.getName())){
+                        if(classesProj.get(val.getSource()) == null){
+                            classesProj.put(val.getSource(), new HashSet<>());
+                            if(pacotesProj.get(val.getPack()) == null){
+                                Set<String>c = new HashSet<>();
+                                pacotesProj.put(val.getPack(), c);
+                            }
+                            pacotesProj.get(val.getPack()).add(val.getSource());
+                        }
+                    }
+                    else
+                        if(!val.getName().equals(val.getSource())){
+                            if(classesProj.get(val.getSource()) == null){
+                                classesProj.put(val.getSource(), new HashSet<>());
+                            }
+                            classesProj.get(val.getSource()).add(val.getName());
+                            if(pacotesProj.get(val.getPack()) == null){
+                                Set<String>c = new HashSet<>();
+                                pacotesProj.put(val.getPack(), c);
+                            }
+                            pacotesProj.get(val.getPack()).add(val.getSource());
+                        }
+            }
+        }
+    }
+    
+    @Override
+    public List<ValorMetrica> metricasFile(Projeto projeto, String file){
+        
+        List<ValorMetrica> lista = null;
+        
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        Transaction t = null;
+        
+        try {
+            t = session.beginTransaction();
+                
+            Query query = session.createQuery("select v from ValorMetrica v "
+                    + "inner join v.metrica m "
+                    + "inner join m.atualizacao a "
+                    + "where a.projeto.id = " + projeto.getId() 
+                    + " and v.name = "+file);
+            
+            lista = (ArrayList<ValorMetrica>) query.list();
+            session.getTransaction().commit();
+        } catch (HibernateException e) {
+            if (t != null) {
+                t.rollback();
+            }
+        } finally {
+            session.close();
+        }
+        
+        return lista;
     }
 }

@@ -11,6 +11,8 @@ import br.com.pucminas.debt.model.Metrica;
 import br.com.pucminas.debt.model.Projeto;
 import br.com.pucminas.debt.model.ValorMetrica;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import org.primefaces.model.TreeNode;
 import org.primefaces.model.mindmap.MindmapNode;
 
@@ -24,9 +26,9 @@ public interface ProjetoDAO {
     void excluir (Projeto projeto);
     public List<Projeto> listar();
     public Atualizacao ultimaAtualizacao(Projeto projeto);
-    List<Metrica> metricasProjeto(Atualizacao atualizacao);
     public TreeNode arvoreProjeto(Projeto projeto);
     public List<ValorMetrica> valoresProjeto(Projeto projeto);
-    public List<String> pacotesProjeto(Projeto projeto);
-    public MindmapNode estruturaProjeto(Projeto projeto);
+    public MindmapNode mapaProjeto(Map<String, Set<String>>pacotesProj, Map<String, Set<String>>classesProj, Projeto projeto);
+    public void estruturaProjeto(Map<String, Set<String>>pacotesProj, Map<String, Set<String>>classesProj, Projeto projeto);
+    public List<ValorMetrica> metricasFile(Projeto projeto, String file);
 }
