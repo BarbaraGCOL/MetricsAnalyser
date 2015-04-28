@@ -19,14 +19,18 @@ import br.com.pucminas.debt.model.Atualizacao;
 import br.com.pucminas.debt.model.Document;
 import br.com.pucminas.debt.model.Metrica;
 import br.com.pucminas.debt.model.Projeto;
+import br.com.pucminas.debt.model.TipoMetrica;
 import br.com.pucminas.debt.model.Usuario;
 import br.com.pucminas.debt.model.ValorMetrica;
 import br.com.pucminas.debt.parser.ParserMetrics;
+import br.com.pucminas.debt.view.MetricasView;
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -36,6 +40,8 @@ import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
 import javax.faces.model.SelectItem;
 import org.primefaces.model.TreeNode;
+import org.primefaces.model.mindmap.MindmapNode;
+import org.primefaces.model.tagcloud.TagCloudModel;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -68,9 +74,11 @@ public class ProjetoController implements Serializable{
 
     private ArrayList<SelectItem>opcoes;
     private String opcao = "Árvore";
-    
-    private List<ValorMetrica>valoresSelection;
 
+    private List<ValorMetrica>valoresSelection;
+    private Set<TipoMetrica> metricasFile;
+    private TagCloudModel model;
+            
     public ProjetoController() {
 
     }
@@ -324,9 +332,8 @@ public class ProjetoController implements Serializable{
         this.opcao = opcao;
     }
     
-    public List<ValorMetrica> buscaValoresSelection(String selection){
-        valoresSelection = dao.metricasFile(projetoSelecionado, selection);
-        return getValoresSelection();
+    public Set<TipoMetrica> getMetricasFile(){
+        return metricasFile;
     }
     
     public List<ValorMetrica> getValoresSelection() {
@@ -335,5 +342,20 @@ public class ProjetoController implements Serializable{
 
     public void setValoresSelection(ArrayList<ValorMetrica> valoresSelection) {
         this.valoresSelection = valoresSelection;
+    }
+    
+    public TagCloudModel modelFile(MindmapNode selection) {
+        MetricasView view = new MetricasView();
+        valoresSelection = dao.metricasFile(projetoSelecionado, selection.getLabel());
+        metricasFile = new HashSet<>();
+        for(ValorMetrica v: valoresSelection){
+            metricasFile.add(v.getMetrica().getTipo());
+        }
+        model = view.modelFile(metricasFile);
+        return model;
+    }
+
+    public void setModel(TagCloudModel model) {
+        this.model = model;
     }
 }

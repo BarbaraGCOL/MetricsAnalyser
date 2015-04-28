@@ -45,8 +45,8 @@ public class ValorMetrica implements Serializable{
     @Column(name = "Value_"+SUFIXO_VALOR_METRICA)
     private Float valor;
     
-    @ManyToOne(cascade = PERSIST, fetch = FetchType.LAZY)
-    @JoinColumn(name = "Id_" + DesignPatterns.SUFIXO_METRICA, nullable = false)
+    @ManyToOne//(cascade = ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "Id_" + DesignPatterns.SUFIXO_METRICA)//, nullable = false)
     private Metrica metrica;
     
     public int getId() {

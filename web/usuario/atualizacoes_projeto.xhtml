@@ -14,91 +14,69 @@
     <ui:define name="content">
         <h:form id="form">
             
-            <h:outputText value="Exibir Estrutura em: "/>
-            <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
-                <p:column style="width:750px">
-                    <h:outputText value="Tabela " />
-                    <p:selectBooleanCheckbox value="#{checkBoxView.value1}">
-                        <p:ajax event="change" update="estruturaPanel" />
-                    </p:selectBooleanCheckbox>
-
-                    <h:outputText value="Árvore " />
-                    <p:selectBooleanCheckbox value="#{checkBoxView.value2}">
-                       <p:ajax event="change" update="treePanel" />
-                    </p:selectBooleanCheckbox>
-                </p:column>
-            </h:panelGrid>
+            <h:outputText value="Exibir Estrutura em: "/>    
+            <p:selectOneRadio id="opcao"
+                value="#{projetoController.opcao}" required="true"
+                requiredMessage="Opção Requerida">
+                <f:selectItems value="#{projetoController.opcoes}" />
+                <p:ajax update="form" event="change"/> 
+            </p:selectOneRadio>
             
-            <p:panel id="estruturaPanel">   
-                <h:panelGrid columns="0" rendered="#{checkBoxView.value1}"
+            <h:panelGrid columns="0" rendered="#{projetoController.opcao == 'Tabela'}"
                              style="border:none; margin:0 auto; width:750px;">
-                    <p:row>
-                        <p:column style="width:750px">
-                            <p:treeTable value="#{projetoController.arvoreProjeto}" 
-                                         style="width:750px;" var="document">
-                                <f:facet name="header">
-                                   #{msg['projeto.estrutura']} #{projetoController.projetoSelecionado.nome}
-                                </f:facet>
-                                <p:column headerText="Nome">
-                                    <h:outputText value="#{document.name}" />
+                <p:row>
+                    <p:column style="width:750px">
+                        <p:treeTable value="#{projetoController.arvoreProjeto}" 
+                                     style="width:750px;" var="document">
+                            <f:facet name="header">
+                                #{msg['projeto.estrutura']} #{projetoController.projetoSelecionado.nome}
+                            </f:facet>
+                            <p:column headerText="Nome">
+                                <h:outputText value="#{document.name}" />
+                            </p:column>
+                            <p:column headerText=" ">
+                            </p:column>
+                            <p:column headerText="Tipo">
+                                <h:outputText value="#{document.type}" />
+                            </p:column>
+                            <p:column style="width:24px">
+                                <p:commandLink update=":form:documentPanel" oncomplete="PF('documentDialog').show()" title="Ver Detalhes" styleClass="ui-icon ui-icon-search">
+                                    <f:setPropertyActionListener value="#{document}" target="#{projetoController.selectedDocument}" />
+                                </p:commandLink>
+                                <p:commandButton icon="ui-icon-calculator" styleClass="button-no-border-icon" title="Atualizações do Projeto" action="#{projetoController.redirecionaMetricasProjeto}" ajax="false"/>
                                 </p:column>
-                                <p:column headerText=" ">
+                        </p:treeTable>
 
-                                </p:column>
-                                <p:column headerText="Tipo">
-                                    <h:outputText value="#{document.type}" />
-                                </p:column>
-                                <p:column style="width:24px">
-                                    <p:commandLink update=":form:documentPanel" oncomplete="PF('documentDialog').show()" title="Ver Detalhes" styleClass="ui-icon ui-icon-search">
-                                        <f:setPropertyActionListener value="#{document}" target="#{projetoController.selectedDocument}" />
-                                    </p:commandLink>
-                                    <p:commandButton icon="ui-icon-calculator" styleClass="button-no-border-icon" title="Atualizações do Projeto" action="#{projetoController.redirecionaMetricasProjeto}" ajax="false"/>
-                                </p:column>
-                            </p:treeTable>
+                        <p:dialog id="dialog" header="Detalhes" showEffect="fade" widgetVar="documentDialog" modal="true" resizable="false">
+                            <p:outputPanel id="documentPanel">
+                                <p:panelGrid  columns="2" columnClasses="label,value" rendered="#{not projetoController.selectedDocument}">
+                                    <h:outputLabel for="name" value="Nome: " />
+                                    <h:outputText id="name" value="#{projetoController.selectedDocument.name}" style="font-weight:bold" />
 
-                            <p:dialog id="dialog" header="Detalhes" showEffect="fade" widgetVar="documentDialog" modal="true" resizable="false">
-                                <p:outputPanel id="documentPanel">
-                                    <p:panelGrid  columns="2" columnClasses="label,value" rendered="#{not projetoController.selectedDocument}">
-                                        <h:outputLabel for="name" value="Nome: " />
-                                        <h:outputText id="name" value="#{projetoController.selectedDocument.name}" style="font-weight:bold" />
-
-                                        <h:outputLabel for="type" value="Tipo: " />
-                                        <h:outputText id="type" value="#{projetoController.selectedDocument.type}" style="font-weight:bold" />
-                                    </p:panelGrid>
-                                </p:outputPanel>
-                            </p:dialog>
-                        </p:column>
-                    </p:row>
-                </h:panelGrid>
-            </p:panel>
-            <p:panel id="treePanel">   
-                <h:panelGrid columns="2" rendered="#{checkBoxView.value2}"
-                              style="border:none;margin:0 auto;width:750px;">
-                    <p:row>
-                        <p:column style="width:580px">
-                            <h:form>
-                                <p:growl id="msgs2" showDetail="true"/>
-                                <p:mindmap id="map" value="#{mindmapView.mapProjeto(projetoController.projetoSelecionado)}" 
-                                           style="width: 580px; height: 600px;">
-                                    <p:ajax event="select" listener="#{mindmapView.onNodeSelect}" />
-                                    <p:ajax event="dblselect" listener="#{mindmapView.onNodeDblselect}" update="msgs2"/>
-                                </p:mindmap>
-                            </h:form>
-                        </p:column>
-                    </p:row>
-                    <p:row>
-                        <p:column style="width:140px">
-                            <h:form>
-                                <p:growl id="msgs" showDetail="true" />
-                                <p:tagCloud model="#{metricasView.model}" style="width:140px; height: 600px;">
-                                    <p:ajax event="select" update="msgs" listener="#{metricasView.onSelect}" />
-                                </p:tagCloud>
-                            </h:form>
-                        </p:column>
-                    </p:row>
-                </h:panelGrid>
-            </p:panel>
-            
+                                    <h:outputLabel for="type" value="Tipo: " />
+                                    <h:outputText id="type" value="#{projetoController.selectedDocument.type}" style="font-weight:bold" />
+                                </p:panelGrid>
+                            </p:outputPanel>
+                        </p:dialog>
+                    </p:column>
+                </p:row>
+            </h:panelGrid>
+              
+            <h:panelGrid columns="1" rendered="#{projetoController.opcao == 'Árvore'}"
+                         style="border:none;margin:0 auto;width:1000px;">
+                <p:row>
+                    <p:column style="width:580px">
+                        <h:form>
+                            <p:growl id="msgs2" showDetail="true"/>
+                            <p:mindmap id="map" value="#{mindmapView.mapProjeto(projetoController.projetoSelecionado)}" 
+                                       style="width: 770px; height: 600px;">
+                                <p:ajax event="select" listener="#{mindmapView.onNodeSelect}" />
+                                <p:ajax event="dblselect" listener="#{mindmapView.onNodeDblselect}" update="msgs2" />
+                            </p:mindmap>
+                        </h:form>
+                    </p:column>
+                </p:row>
+            </h:panelGrid>
         </h:form>
     </ui:define>
 </ui:composition>

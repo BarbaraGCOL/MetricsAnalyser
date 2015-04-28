@@ -12,24 +12,24 @@
         <span><a><p:outputLabel value="#{msg['projeto']} #{projetoController.projetoSelecionado.nome}"/></a></span> 
     </ui:define>
     <ui:define name="content">
-        <p:layout style="min-width:400px;min-height:620px; overflow-x: hidden; overflow-y: hidden;">
-            <p:layoutUnit position="east">
-                <h:form>
-                    <p:growl id="msgs" showDetail="true" />
-                    <p:tagCloud model="#{metricasView.model}" style="width: 150px; border: none">
-                        <p:ajax event="select" update="msgs" listener="#{metricasView.onSelect}" />
-                    </p:tagCloud>
-                </h:form>
-            </p:layoutUnit>
-            <p:layoutUnit position="center" resizable="true" size="50" minSize="40" maxSize="200">
-                <h:form>
-                    <p:growl id="msgs2" showDetail="true"/>
-                    <p:mindmap id="map" value="#{mindmapView.mapProjeto(projetoController.projetoSelecionado)}" style="width: 90%;height: 600px; overflow-x: hidden; overflow-y: hidden;">
-                        <p:ajax event="select" listener="#{mindmapView.onNodeSelect}" />
-                        <p:ajax event="dblselect" listener="#{mindmapView.onNodeDblselect}" update="msgs2"/>
-                    </p:mindmap>
-                </h:form>
-            </p:layoutUnit>
-        </p:layout>
+        <h:panelGrid columns="2" style="border:none;margin:0 auto;width:750px;">
+            <p:row>
+                <p:column style="width:140px">
+                    <h:form>
+                        <p:growl id="msgs" showDetail="true" />
+                        <p:tagCloud model="#{projetoController.modelFile(mindmapView.selectedNode)}" style="width:140px; height: 600px;">
+                            <p:ajax event="select" update="msgs" listener="#{metricasView.onSelect}" />
+                        </p:tagCloud>
+                    </h:form>
+                </p:column>
+            </p:row>
+            <p:row>
+                <p:column style="width:580px">
+                    <h:form>
+                        <p:chart type="metergauge" model="#{meterView.meterGaugeModel2}" style="width: 580px; height: 600px;"/>
+                    </h:form>
+                </p:column>
+            </p:row>
+        </h:panelGrid>
     </ui:define>
 </ui:composition>

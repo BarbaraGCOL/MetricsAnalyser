@@ -40,11 +40,11 @@ public class Metrica implements Serializable{
     @Enumerated(EnumType.STRING) 
     private TipoMetrica tipo;
     
-    @ManyToOne(cascade = PERSIST, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = PERSIST, fetch = FetchType.EAGER)
     @JoinColumn(name = "Id_" + SUFIXO_ATUALIZACAO, nullable = false)
     private Atualizacao atualizacao;
     
-    @OneToMany(mappedBy="metrica", cascade = PERSIST, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy="metrica")//, cascade = ALL, fetch = FetchType.LAZY)
     List<ValorMetrica>valores;
  
     public int getId() {

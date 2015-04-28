@@ -281,7 +281,9 @@ public class ProjetoDAOImpl implements ProjetoDAO, Serializable {
                     + "inner join v.metrica m "
                     + "inner join m.atualizacao a "
                     + "where a.projeto.id = " + projeto.getId() 
-                    + " and v.name = "+file);
+                    + " and ( v.name = '" + file
+                    +"' or v.source = '" + file
+                    +"' or v.pack = '" + file + "')");
             
             lista = (ArrayList<ValorMetrica>) query.list();
             session.getTransaction().commit();

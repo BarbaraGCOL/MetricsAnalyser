@@ -10,6 +10,7 @@ package br.com.pucminas.debt.view;
  * @author barbara.lopes
  */
 import br.com.pucminas.debt.model.TipoMetrica;
+import java.util.Set;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -27,12 +28,29 @@ public class MetricasView {
      
     @PostConstruct
     public void init() {
+//        model = new DefaultTagCloudModel();
+//        int count = 0;
+//        
+//        int []sizes = new int []{1,3,2,5,4,2,5,3,4,1,1,3,2,5,4,2,5,3,4,1,3,4,1};  
+//        
+//        for(TipoMetrica t: TipoMetrica.values()){
+//            if(count % 2 == 0){
+//                model.addTag(new DefaultTagCloudItem(t.name(), sizes[count]));
+//            }
+//            else{
+//                model.addTag(new DefaultTagCloudItem(t.name(), "#", sizes[count]));
+//            }
+//            count ++;
+//        }
+    }
+ 
+    public TagCloudModel modelFile(Set<TipoMetrica>tipos){
         model = new DefaultTagCloudModel();
         int count = 0;
         
         int []sizes = new int []{1,3,2,5,4,2,5,3,4,1,1,3,2,5,4,2,5,3,4,1,3,4,1};  
         
-        for(TipoMetrica t: TipoMetrica.values()){
+        for(TipoMetrica t: tipos){
             if(count % 2 == 0){
                 model.addTag(new DefaultTagCloudItem(t.name(), sizes[count]));
             }
@@ -41,8 +59,10 @@ public class MetricasView {
             }
             count ++;
         }
+        
+        return model;
     }
- 
+          
     public TagCloudModel getModel() {
         return model;
     }
