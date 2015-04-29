@@ -10,8 +10,12 @@ import br.com.pucminas.debt.model.Projeto;
 import br.com.pucminas.debt.util.HibernateUtil;
 import java.io.File;
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -53,9 +57,13 @@ public class AtualizacaoDAOImpl implements AtualizacaoDAO, Serializable{
     
     @Override
     public boolean atualizacaoExiste(Date data, List<Atualizacao>atualizacoes){
+        String date1, date2;
+        SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        date1 = DATE_FORMAT.format(data);
+        
         for(Atualizacao a: atualizacoes){
-            System.out.println(a.getData() +" data "+data);
-            if(a.getData().equals(data)){
+            date2 = DATE_FORMAT.format(a.getData());
+            if(date1.equals(date2)){
                 return true;
             }
         }

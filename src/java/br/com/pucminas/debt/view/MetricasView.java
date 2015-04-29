@@ -28,20 +28,7 @@ public class MetricasView {
      
     @PostConstruct
     public void init() {
-//        model = new DefaultTagCloudModel();
-//        int count = 0;
-//        
-//        int []sizes = new int []{1,3,2,5,4,2,5,3,4,1,1,3,2,5,4,2,5,3,4,1,3,4,1};  
-//        
-//        for(TipoMetrica t: TipoMetrica.values()){
-//            if(count % 2 == 0){
-//                model.addTag(new DefaultTagCloudItem(t.name(), sizes[count]));
-//            }
-//            else{
-//                model.addTag(new DefaultTagCloudItem(t.name(), "#", sizes[count]));
-//            }
-//            count ++;
-//        }
+
     }
  
     public TagCloudModel modelFile(Set<TipoMetrica>tipos){
