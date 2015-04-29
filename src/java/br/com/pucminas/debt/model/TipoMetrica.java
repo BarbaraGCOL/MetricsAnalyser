@@ -65,10 +65,10 @@ public enum TipoMetrica {
     }
     
     static {  
-        relations = new HashMap<String, TipoMetrica>();  
+        relations = new HashMap<>();  
         for(TipoMetrica m : values()) relations.put(m.getDescricao(), m);      
         
-        relations2 = new HashMap<String, TipoMetrica>();  
+        relations2 = new HashMap<>();  
         for(TipoMetrica m : values()) relations2.put(m.toString(), m);     
     }
 }

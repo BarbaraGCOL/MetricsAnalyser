@@ -215,7 +215,7 @@ public class ProjetoDAOImpl implements ProjetoDAO, Serializable {
                 for(String c: pack.getValue()){
                     classe = new DefaultMindmapNode(c, c, "82c542", true);
                     for(String m: classesProj.get(c)){
-                        metodo = new DefaultMindmapNode(m, m, "BC8F8F", true);
+                        metodo = new DefaultMindmapNode(m, m, "fce24f", true);
                         classe.addNode(metodo);
                     }
                     pacote.addNode(classe);
@@ -281,9 +281,10 @@ public class ProjetoDAOImpl implements ProjetoDAO, Serializable {
                     + "inner join v.metrica m "
                     + "inner join m.atualizacao a "
                     + "where a.projeto.id = " + projeto.getId() 
-                    + " and ( v.name = '" + file
-                    +"' or v.source = '" + file
-                    +"' or v.pack = '" + file + "')");
+                    + " and v.name = '" + file + "'");
+//                    + " and ( v.name = '" + file
+//                    +"' or v.source = '" + file
+//                    +"' or v.pack = '" + file + "')");
             
             lista = (ArrayList<ValorMetrica>) query.list();
             session.getTransaction().commit();
