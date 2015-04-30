@@ -28,8 +28,10 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
@@ -343,13 +345,15 @@ public class ProjetoController implements Serializable{
     public void setValoresSelection(ArrayList<ValorMetrica> valoresSelection) {
         this.valoresSelection = valoresSelection;
     }
-    
+    Map<String, String> metricas = new HashMap<>();
+
     public TagCloudModel modelFile(MindmapNode selection) {
         MetricasView view = new MetricasView();
         valoresSelection = dao.metricasFile(projetoSelecionado, selection.getLabel());
         metricasFile = new HashSet<>();
         for(ValorMetrica v: valoresSelection){
             metricasFile.add(v.getMetrica().getTipo());
+            metricas.put(v.getMetrica().getTipo().toString(), v.getMetrica().getTipo().getDescricaoPort());
         }
         model = view.modelFile(metricasFile);
         return model;
@@ -357,5 +361,13 @@ public class ProjetoController implements Serializable{
 
     public void setModel(TagCloudModel model) {
         this.model = model;
+    }
+    
+    public Map<String, String> getMetricas() {
+        return metricas;
+    }
+
+    public void setMetricas(Map<String, String> metricas) {
+        this.metricas = metricas;
     }
 }

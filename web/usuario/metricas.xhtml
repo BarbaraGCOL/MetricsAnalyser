@@ -24,11 +24,19 @@
                 </p:column>
             </p:row>
             <p:row>
+                <p:panel style="width: 580px; height: 600px;">
+                    <c:forEach var="metrica" items="${projetoController.metricas}">
+                        <p:column>#{metrica.key}</p:column>
+                        <p:column>#{metrica.value}</p:column>
+                    </c:forEach>
+                </p:panel>
+                <!--
                 <p:column style="width:580px">
                     <h:form>
                         <p:chart type="metergauge" model="#{meterView.meterGaugeModel2}" style="width: 580px; height: 600px;"/>
                     </h:form>
                 </p:column>
+                -->
             </p:row>
         </h:panelGrid>
     </ui:define>
