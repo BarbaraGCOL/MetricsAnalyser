@@ -14,29 +14,29 @@ import java.util.Map;
  */
 public enum TipoMetrica {
     
-    PAR("Number of Parameters", "Qt Parâmetros"),
-    NSF("Number of Static Attributes", "Qt Atributos Estáticos"),
+    PAR("Number of Parameters", "Quantidade de Parâmetros"),
+    NSF("Number of Static Attributes", "Quantidade de Atributos Estáticos"),
     CE("Efferent Coupling", "Acoplamento"),
     SIX("Specialization Index", "Índice de Especialização"),
-    NOC("Number of Classes", "Qt Classes"),
-    NOF("Number of Attributes", "Qt Atributos"),
+    NOC("Number of Classes", "Quantidade de Classes"),
+    NOF("Number of Attributes", "Quantidade de Atributos"),
     RMA("Abstractness", "Abstração"),
     RMD("Normalized Distance", "Distância Normalizada"),
-    NSM("Number of Static Methods", "Qt Métodos Estáticos"),
-    NOI("Number of Interfaces", "Qt Interfaces"),
-    TLOC("Total Lines of Code", "Qt Linhas Código"),
+    NSM("Number of Static Methods", "Quantidade de Métodos Estáticos"),
+    NOI("Number of Interfaces", "Quantidade de Interfaces"),
+    TLOC("Total Lines of Code", "Quantidade de Linhas Código"),
     WMC("Weighted methods per Class", "Métodos Pesados/Classe"),
-    NOM("Number of Methods", "Qt Métodos"),
+    NOM("Number of Methods", "Quantidade de Métodos"),
     DIT("Depth of Inheritance Tree", "Profundidade Árvore de Herança"),
-    NOP("Number of Packages", "Qt Pacotes"),
+    NOP("Number of Packages", "Quantidade de Pacotes"),
     RMI("Instability", "Instabilidade"),
     VG("McCabe Cyclomatic Complexity", "Complexidade Ciclomática McCabe"),
-    NBD("Nested Block Depth", "Blodo de Profundidade"),
+    NBD("Nested Block Depth", "Bloco de Profundidade"),
     LCOM("Lack of Cohesion of Methods", "Falta de Coesão dos Métodos"),
     MLOC("Method Lines of Code", "Linhas de Código do Método"),
-    NORM("Number of Overridden Methods", "Qt Métodos Sobrescritos"),
+    NORM("Number of Overridden Methods", "Quantidade de Métodos Sobrescritos"),
     CA("Afferent Coupling", "Acoplamento Aferente"),
-    NSC("Number of Children", "Qt Filhos");
+    NSC("Number of Children", "Quantidade de Filhos");
     
     private final String descricao;
     private final String descricaoPort;

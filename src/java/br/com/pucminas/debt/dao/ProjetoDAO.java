@@ -7,7 +7,6 @@
 package br.com.pucminas.debt.dao;
 
 import br.com.pucminas.debt.model.Atualizacao;
-import br.com.pucminas.debt.model.Metrica;
 import br.com.pucminas.debt.model.Projeto;
 import br.com.pucminas.debt.model.ValorMetrica;
 import java.util.List;
@@ -31,4 +30,5 @@ public interface ProjetoDAO {
     public MindmapNode mapaProjeto(Map<String, Set<String>>pacotesProj, Map<String, Set<String>>classesProj, Projeto projeto);
     public void estruturaProjeto(Map<String, Set<String>>pacotesProj, Map<String, Set<String>>classesProj, Projeto projeto);
     public List<ValorMetrica> metricasFile(Projeto projeto, String file);
+    public List<ValorMetrica> valoresMetrica(Projeto projeto, String metrica, String file);
 }

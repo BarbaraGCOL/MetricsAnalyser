@@ -6,38 +6,41 @@
                 xmlns:p="http://primefaces.org/ui"  
                 xmlns:f="http://java.sun.com/jsf/core"  
                 template="/templates/template.xhtml"
-                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">  
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+                xmlns:a4j="http://richfaces.org/a4j">  
 
     <ui:define name="cabecalho">
         <span><a><p:outputLabel value="#{msg['projeto']} #{projetoController.projetoSelecionado.nome}"/></a></span> 
     </ui:define>
     <ui:define name="content">
-        <h:panelGrid columns="2" style="border:none;margin:0 auto;width:750px;">
-            <p:row>
-                <p:column style="width:140px">
-                    <h:form>
-                        <p:growl id="msgs" showDetail="true" />
-                        <p:tagCloud model="#{projetoController.modelFile(mindmapView.selectedNode)}" style="width:140px; height: 600px;">
-                            <p:ajax event="select" update="msgs" listener="#{metricasView.onSelect}" />
-                        </p:tagCloud>
-                    </h:form>
-                </p:column>
-            </p:row>
-            <p:row>
-                <p:panel style="width: 580px; height: 600px;">
-                    <c:forEach var="metrica" items="${projetoController.metricas}">
-                        <p:column>#{metrica.key}</p:column>
-                        <p:column>#{metrica.value}</p:column>
+        <p:panelGrid styleClass="semBorda" columns="3" style="width: 800px;">
+            <p:column>
+                <h:form styleClass="cloud" style="width: 300px;">
+                    <p:growl id="msgs" showDetail="true" />
+                    <p:tagCloud styleClass="cloud" model="${metricasController.modelFile(mindmapView.selectedNode, projetoController.projetoSelecionado)}" style="min-height: 100px; background: #cceeff;">
+                        <p:ajax event="select" update="msgs" listener="#{metricasView.onSelect}" />
+                    </p:tagCloud>
+                </h:form>
+                <br/><br/><p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/img/metrics.jpg"/>
+            </p:column>
+            <p:column>
+                <p:panelGrid styleClass="semBorda" columns="3">
+                    <c:forEach var="metrica" items="${metricasController.valoresMetricas}">
+                        <p:panel style="margin-bottom:5px; background: white;
+                                 width: 220px; height: 100px; border: none;">
+                            <h1>#{metrica.key} 
+                                <h:outputLabel style="color: #459add ; font-size: x-large;">
+                                    &#160;&#160;#{metrica.value}
+                                </h:outputLabel>
+                            </h1>
+                            <p style="color: #333333; font-size: small;">
+                                #{metricasController.metricas[metrica.key]}
+                            </p>
+                        </p:panel>
                     </c:forEach>
-                </p:panel>
-                <!--
-                <p:column style="width:580px">
-                    <h:form>
-                        <p:chart type="metergauge" model="#{meterView.meterGaugeModel2}" style="width: 580px; height: 600px;"/>
-                    </h:form>
-                </p:column>
-                -->
-            </p:row>
-        </h:panelGrid>
+                </p:panelGrid>
+            </p:column>
+        </p:panelGrid>
     </ui:define>
 </ui:composition>
+

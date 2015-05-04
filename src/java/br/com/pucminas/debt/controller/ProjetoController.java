@@ -77,10 +77,7 @@ public class ProjetoController implements Serializable{
     private ArrayList<SelectItem>opcoes;
     private String opcao = "Árvore";
 
-    private List<ValorMetrica>valoresSelection;
-    private Set<TipoMetrica> metricasFile;
-    private TagCloudModel model;
-            
+    
     public ProjetoController() {
 
     }
@@ -332,42 +329,5 @@ public class ProjetoController implements Serializable{
 
     public void setOpcao(String opcao) {
         this.opcao = opcao;
-    }
-    
-    public Set<TipoMetrica> getMetricasFile(){
-        return metricasFile;
-    }
-    
-    public List<ValorMetrica> getValoresSelection() {
-        return valoresSelection;
-    }
-
-    public void setValoresSelection(ArrayList<ValorMetrica> valoresSelection) {
-        this.valoresSelection = valoresSelection;
-    }
-    Map<String, String> metricas = new HashMap<>();
-
-    public TagCloudModel modelFile(MindmapNode selection) {
-        MetricasView view = new MetricasView();
-        valoresSelection = dao.metricasFile(projetoSelecionado, selection.getLabel());
-        metricasFile = new HashSet<>();
-        for(ValorMetrica v: valoresSelection){
-            metricasFile.add(v.getMetrica().getTipo());
-            metricas.put(v.getMetrica().getTipo().toString(), v.getMetrica().getTipo().getDescricaoPort());
-        }
-        model = view.modelFile(metricasFile);
-        return model;
-    }
-
-    public void setModel(TagCloudModel model) {
-        this.model = model;
-    }
-    
-    public Map<String, String> getMetricas() {
-        return metricas;
-    }
-
-    public void setMetricas(Map<String, String> metricas) {
-        this.metricas = metricas;
     }
 }

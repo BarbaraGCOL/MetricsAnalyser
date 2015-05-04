@@ -268,7 +268,10 @@ public class ProjetoDAOImpl implements ProjetoDAO, Serializable {
     
     @Override
     public List<ValorMetrica> metricasFile(Projeto projeto, String file){
-        
+        String s = file;
+        if(s.split("\\.").length == 2){
+            file = s.split("\\.")[0];
+        }
         List<ValorMetrica> lista = null;
         
         Session session = HibernateUtil.getSessionFactory().openSession();
@@ -282,9 +285,40 @@ public class ProjetoDAOImpl implements ProjetoDAO, Serializable {
                     + "inner join m.atualizacao a "
                     + "where a.projeto.id = " + projeto.getId() 
                     + " and v.name = '" + file + "'");
-//                    + " and ( v.name = '" + file
-//                    +"' or v.source = '" + file
-//                    +"' or v.pack = '" + file + "')");
+            
+            lista = (ArrayList<ValorMetrica>) query.list();
+            session.getTransaction().commit();
+        } catch (HibernateException e) {
+            if (t != null) {
+                t.rollback();
+            }
+        } finally {
+            session.close();
+        }
+        
+        return lista;
+    }
+    
+    @Override
+    public List<ValorMetrica> valoresMetrica(Projeto projeto, String metrica, String file){
+        String s = file;
+        if(s.split("\\.").length == 2){
+            file = s.split("\\.")[0];
+        }
+        List<ValorMetrica> lista = null;
+        
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        Transaction t = null;
+        
+        try {
+            t = session.beginTransaction();
+                
+            Query query = session.createQuery("select v from ValorMetrica v "
+                    + "inner join v.metrica m "
+                    + "inner join m.atualizacao a "
+                    + "where a.projeto.id = " + projeto.getId() 
+                    + " and v.name = '" + file + "' "
+                    + "and v.tipo = " + metrica);
             
             lista = (ArrayList<ValorMetrica>) query.list();
             session.getTransaction().commit();
