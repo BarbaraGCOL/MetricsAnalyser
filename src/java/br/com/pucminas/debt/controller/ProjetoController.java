@@ -6,33 +6,27 @@
 package br.com.pucminas.debt.controller;
 
 import br.com.pucminas.debt.dao.AtualizacaoDAO;
-import br.com.pucminas.debt.dao.AtualizacaoDAOImpl;
+import br.com.pucminas.debt.dao.impl.AtualizacaoDAOImpl;
 import br.com.pucminas.debt.dao.MetricaDAO;
-import br.com.pucminas.debt.dao.MetricaDAOImpl;
+import br.com.pucminas.debt.dao.impl.MetricaDAOImpl;
 import br.com.pucminas.debt.dao.ProjetoDAO;
-import br.com.pucminas.debt.dao.ProjetoDAOImpl;
+import br.com.pucminas.debt.dao.impl.ProjetoDAOImpl;
 import br.com.pucminas.debt.dao.UsuarioDAO;
-import br.com.pucminas.debt.dao.UsuarioDAOImpl;
+import br.com.pucminas.debt.dao.impl.UsuarioDAOImpl;
 import br.com.pucminas.debt.dao.ValorMetricaDAO;
-import br.com.pucminas.debt.dao.ValorMetricaDAOImpl;
+import br.com.pucminas.debt.dao.impl.ValorMetricaDAOImpl;
 import br.com.pucminas.debt.model.Atualizacao;
 import br.com.pucminas.debt.model.Document;
 import br.com.pucminas.debt.model.Metrica;
 import br.com.pucminas.debt.model.Projeto;
-import br.com.pucminas.debt.model.TipoMetrica;
 import br.com.pucminas.debt.model.Usuario;
 import br.com.pucminas.debt.model.ValorMetrica;
 import br.com.pucminas.debt.parser.ParserMetrics;
-import br.com.pucminas.debt.view.MetricasView;
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -42,8 +36,6 @@ import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
 import javax.faces.model.SelectItem;
 import org.primefaces.model.TreeNode;
-import org.primefaces.model.mindmap.MindmapNode;
-import org.primefaces.model.tagcloud.TagCloudModel;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -59,8 +51,6 @@ public class ProjetoController implements Serializable{
     private Projeto projeto;
     private DataModel listaProjetos;
     private Atualizacao ultimaAtualizacaoProjeto;
-    private TreeNode arvoreProjeto;
-    private Document selectedDocument;
     private Projeto projetoSelecionado;
     
     /*DAOs*/
@@ -93,44 +83,7 @@ public class ProjetoController implements Serializable{
         opcoes.add(new SelectItem("Tabela", "Tabela"));
     }
     
-    public Projeto getProjeto() {
-        if (projeto == null) {
-            projeto = new Projeto();
-        }
-        return projeto;
-    }
-
-    public void setProjeto(Projeto projeto) {
-        this.projeto = projeto;
-    }
-
-    public Projeto getProjetoSelecionado() {
-        return projetoSelecionado;
-    }
-
-    public void setProjetoSelecionado(Projeto projetoSelecionado) {
-        this.projetoSelecionado = projetoSelecionado;
-    }
-
-    public Atualizacao getUltimaAtualizacaoProjeto() {
-        if(ultimaAtualizacaoProjeto == null && projetoSelecionado != null){
-            setUltimaAtualizacaoProjeto(dao.ultimaAtualizacao(projetoSelecionado));
-        }
-        return ultimaAtualizacaoProjeto;
-    }
-
-    public void setUltimaAtualizacaoProjeto(Atualizacao ultimaAtualizacaoProjeto) {
-        this.ultimaAtualizacaoProjeto = ultimaAtualizacaoProjeto;
-    }
-
-    public DataModel getListarProjetos() {
-        ProjetoDAOImpl est = new ProjetoDAOImpl();
-        List<Projeto> lista = est.listar();
-        listaProjetos = new ListDataModel(lista);
-
-        return listaProjetos;
-    }
-
+    
     public void prepararAdicionarProjeto(ActionEvent actionEvent) {
         projeto = new Projeto();
         projeto.setGerente(usuarioLogado);
@@ -293,25 +246,6 @@ public class ProjetoController implements Serializable{
         this.usuarioLogado = usuarioLogado;
     }
     
-    public TreeNode getArvoreProjeto() {
-        if(arvoreProjeto == null){
-            setArvoreProjeto(dao.arvoreProjeto(projetoSelecionado));
-        }
-        return arvoreProjeto;
-    }
-
-    public void setArvoreProjeto(TreeNode arvoreProjeto) {
-        this.arvoreProjeto = arvoreProjeto;
-    }
-    
-    public Document getSelectedDocument() {
-        return selectedDocument;
-    }
- 
-    public void setSelectedDocument(Document selectedDocument) {
-        this.selectedDocument = selectedDocument;
-    }
-    
     public ArrayList<SelectItem> getOpcoes() {
         if(opcoes == null){
             loadOpcoes();
@@ -329,5 +263,43 @@ public class ProjetoController implements Serializable{
 
     public void setOpcao(String opcao) {
         this.opcao = opcao;
+    }
+    
+    public Projeto getProjeto() {
+        if (projeto == null) {
+            projeto = new Projeto();
+        }
+        return projeto;
+    }
+
+    public void setProjeto(Projeto projeto) {
+        this.projeto = projeto;
+    }
+
+    public Projeto getProjetoSelecionado() {
+        return projetoSelecionado;
+    }
+
+    public void setProjetoSelecionado(Projeto projetoSelecionado) {
+        this.projetoSelecionado = projetoSelecionado;
+    }
+
+    public Atualizacao getUltimaAtualizacaoProjeto() {
+        if(ultimaAtualizacaoProjeto == null && projetoSelecionado != null){
+            setUltimaAtualizacaoProjeto(dao.ultimaAtualizacao(projetoSelecionado));
+        }
+        return ultimaAtualizacaoProjeto;
+    }
+
+    public void setUltimaAtualizacaoProjeto(Atualizacao ultimaAtualizacaoProjeto) {
+        this.ultimaAtualizacaoProjeto = ultimaAtualizacaoProjeto;
+    }
+
+    public DataModel getListarProjetos() {
+        ProjetoDAOImpl est = new ProjetoDAOImpl();
+        List<Projeto> lista = est.listar();
+        listaProjetos = new ListDataModel(lista);
+
+        return listaProjetos;
     }
 }

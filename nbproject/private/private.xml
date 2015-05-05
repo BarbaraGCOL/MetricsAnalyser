@@ -5,7 +5,7 @@
         <group>
             <file>file:/C:/TCC/MetricsAnalyser/src/java/br/com/pucminas/debt/controller/ProjetoController.java</file>
             <file>file:/C:/TCC/MetricsAnalyser/src/java/br/com/pucminas/debt/view/ChartView.java</file>
-            <file>file:/C:/TCC/MetricsAnalyser/src/java/br/com/pucminas/debt/view/MetricasView.java</file>
+            <file>file:/C:/TCC/MetricsAnalyser/src/java/br/com/pucminas/debt/dao/ProjetoDAOImpl.java</file>
             <file>file:/C:/TCC/MetricsAnalyser/src/java/br/com/pucminas/debt/controller/MetricasController.java</file>
             <file>file:/C:/TCC/MetricsAnalyser/web/usuario/metricas.xhtml</file>
         </group>

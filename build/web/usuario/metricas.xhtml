@@ -18,7 +18,7 @@
                 <h:form styleClass="cloud" style="width: 300px;">
                     <p:growl id="msgs" showDetail="true" />
                     <p:tagCloud styleClass="cloud" model="${metricasController.modelFile(mindmapView.selectedNode, projetoController.projetoSelecionado)}" style="min-height: 100px; background: #cceeff;">
-                        <p:ajax event="select" update="msgs" listener="#{metricasView.onSelect}" />
+                        <p:ajax event="select" update="msgs" listener="#{metricasController.onSelect}" />
                     </p:tagCloud>
                 </h:form>
                 <br/><br/><p:graphicImage value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/img/metrics.jpg"/>
@@ -41,6 +41,9 @@
                 </p:panelGrid>
             </p:column>
         </p:panelGrid>
+        <h:panelGrid columns="2" columnClasses="left,right" style="width:100%">
+            <p:chart type="line" model="#{metricasController.initLineChart()}" style="width:400px;" />
+        </h:panelGrid>
     </ui:define>
 </ui:composition>
 

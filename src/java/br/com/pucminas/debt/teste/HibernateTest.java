@@ -1,9 +1,9 @@
 package br.com.pucminas.debt.teste;
 
 import br.com.pucminas.debt.model.Autorizacao;
-import br.com.pucminas.debt.dao.AutorizacaoDAOImpl;
+import br.com.pucminas.debt.dao.impl.AutorizacaoDAOImpl;
 import br.com.pucminas.debt.model.Usuario;
-import br.com.pucminas.debt.dao.UsuarioDAOImpl;
+import br.com.pucminas.debt.dao.impl.UsuarioDAOImpl;
 
 import java.sql.SQLException;
 

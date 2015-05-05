@@ -1,7 +1,7 @@
 package br.com.pucminas.debt.controller;
 
 import br.com.pucminas.debt.model.Usuario;
-import br.com.pucminas.debt.dao.UsuarioDAOImpl;
+import br.com.pucminas.debt.dao.impl.UsuarioDAOImpl;
 import br.com.pucminas.debt.dao.UsuarioDAO;
 import br.com.pucminas.debt.model.Autorizacao;
 import java.util.List;
