@@ -24,42 +24,37 @@
             
             <h:panelGrid columns="0" rendered="#{projetoController.opcao == 'Tabela'}"
                              style="border:none; margin:0 auto; width:750px;">
-                <p:row>
-                    <p:column style="width:750px">
-                        <p:treeTable value="#{projetoController.arvoreProjeto}" 
-                                     style="width:750px;" var="document">
-                            <f:facet name="header">
-                                #{msg['projeto.estrutura']} #{projetoController.projetoSelecionado.nome}
-                            </f:facet>
-                            <p:column headerText="Nome">
-                                <h:outputText value="#{document.name}" />
-                            </p:column>
-                            <p:column headerText=" ">
-                            </p:column>
-                            <p:column headerText="Tipo">
-                                <h:outputText value="#{document.type}" />
-                            </p:column>
-                            <p:column style="width:24px">
-                                <p:commandLink update=":form:documentPanel" oncomplete="PF('documentDialog').show()" title="Ver Detalhes" styleClass="ui-icon ui-icon-search">
-                                    <f:setPropertyActionListener value="#{document}" target="#{projetoController.selectedDocument}" />
-                                </p:commandLink>
-                                <p:commandButton icon="ui-icon-calculator" styleClass="button-no-border-icon" title="Atualizações do Projeto" action="#{projetoController.redirecionaMetricasProjeto}" ajax="false"/>
-                                </p:column>
-                        </p:treeTable>
+                
+                   <p:tree value="#{treeSelectionView.root1}" var="doc"
+                           selectionMode="single"
+                           selection="#{treeSelectionView.selectedNode}">
+                    <p:treeNode expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">
+                        <h:outputText value="#{doc.name}"/>
+                    </p:treeNode>
+                    <p:treeNode type="document" icon="ui-icon-document">
+                        <h:outputText value="#{doc.name}" />
+                    </p:treeNode>
+                    <p:treeNode type="picture" icon="ui-icon-image">
+                        <h:outputText value="#{doc.name}" />
+                    </p:treeNode>
+                    <p:treeNode type="mp3" icon="ui-icon-video">
+                        <h:outputText value="#{doc.name}" />
+                    </p:treeNode>
+                </p:tree>
+ 
 
-                        <p:dialog id="dialog" header="Detalhes" showEffect="fade" widgetVar="documentDialog" modal="true" resizable="false">
-                            <p:outputPanel id="documentPanel">
-                                <p:panelGrid  columns="2" columnClasses="label,value" rendered="#{not projetoController.selectedDocument}">
-                                    <h:outputLabel for="name" value="Nome: " />
-                                    <h:outputText id="name" value="#{projetoController.selectedDocument.name}" style="font-weight:bold" />
+                    <p:dialog id="dialog" header="Document Detail" showEffect="fade" widgetVar="documentDialog" modal="true" resizable="false">
+                        <p:outputPanel id="documentPanel">
+                            <p:panelGrid  columns="2" columnClasses="label,value" rendered="#{not empty ttBasicView.selectedDocument}">
+                                <h:outputLabel for="name" value="Name: " />
+                                <h:outputText id="name" value="#{ttBasicView.selectedDocument.name}" style="font-weight:bold" />
 
-                                    <h:outputLabel for="type" value="Tipo: " />
-                                    <h:outputText id="type" value="#{projetoController.selectedDocument.type}" style="font-weight:bold" />
-                                </p:panelGrid>
-                            </p:outputPanel>
-                        </p:dialog>
-                    </p:column>
-                </p:row>
+                                <h:outputLabel for="type" value="Type " />
+                                <h:outputText id="type" value="#{ttBasicView.selectedDocument.type}" style="font-weight:bold" />
+                            </p:panelGrid>
+                        </p:outputPanel>
+                    </p:dialog>
+                
             </h:panelGrid>
               
             <h:panelGrid columns="1" rendered="#{projetoController.opcao == 'Árvore'}"
@@ -68,10 +63,10 @@
                     <p:column style="width:580px">
                         <h:form>
                             <p:growl id="msgs2" showDetail="true"/>
-                            <p:mindmap id="map" value="#{mindmapView.mapProjeto(projetoController.projetoSelecionado)}" 
+                            <p:mindmap id="map" value="#{metricasController.mapProjeto(projetoController.projetoSelecionado)}" 
                                        style="width: 770px; height: 600px;">
-                                <p:ajax event="select" listener="#{mindmapView.onNodeSelect}" />
-                                <p:ajax event="dblselect" listener="#{mindmapView.onNodeDblselect}" update="msgs2" />
+                                <p:ajax event="select" listener="#{metricasController.onNodeSelect}" />
+                                <p:ajax event="dblselect" listener="#{metricasController.onNodeDblselect}" update="msgs2" />
                             </p:mindmap>
                         </h:form>
                     </p:column>

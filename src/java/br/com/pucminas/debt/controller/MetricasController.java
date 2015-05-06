@@ -7,12 +7,11 @@ package br.com.pucminas.debt.controller;
 
 import br.com.pucminas.debt.dao.ProjetoDAO;
 import br.com.pucminas.debt.dao.impl.ProjetoDAOImpl;
-import br.com.pucminas.debt.model.Atualizacao;
 import br.com.pucminas.debt.model.Document;
 import br.com.pucminas.debt.model.Projeto;
 import br.com.pucminas.debt.model.TipoMetrica;
 import br.com.pucminas.debt.model.ValorMetrica;
-import br.com.pucminas.debt.view.MetricasView;
+import br.com.pucminas.debt.service.DocumentService;
 import java.io.IOException;
 import java.io.Serializable;
 import java.text.ParseException;
@@ -27,6 +26,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
  
@@ -65,6 +65,9 @@ public class MetricasController implements Serializable {
     private TreeNode arvoreProjeto;
     private Document selectedDocument;
     
+    @ManagedProperty("#{documentService}")
+    private DocumentService service;
+    
     public MetricasController() {
     }
     
@@ -81,6 +84,13 @@ public class MetricasController implements Serializable {
             root = dao.mapaProjeto(pacotesProj, classesProj, projeto);
         }
         return root;
+    }
+    
+    public TreeNode estruturaArvoreProjeto(Projeto projeto){
+        if(arvoreProjeto == null || this.projeto == null || this.projeto.getId() != projeto.getId()){
+            this.arvoreProjeto = service.createDocuments(projeto);
+        }
+        return this.arvoreProjeto;
     }
     
     public MindmapNode getRoot() {
@@ -160,10 +170,14 @@ public class MetricasController implements Serializable {
         this.valores = dao.valoresMetrica(this.projeto, this.metrica, file);
     }
     
-    public String onSelectTable(){
+    public void onSelectTable(){
         this.file = selectedDocument.getName();
         getModelFile();
-        return redirecionaMetricasProjeto();
+        try {
+            FacesContext.getCurrentInstance().getExternalContext().redirect("metricas.jsf");
+        } catch (IOException ex) {
+            Logger.getLogger(MetricasController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     public LineChartModel initLineChart() {
@@ -181,7 +195,7 @@ public class MetricasController implements Serializable {
                     datetime = sf.parse(val.getMetrica().getAtualizacao().getData()+"");
                     data = sfData.format(datetime); 
                 } catch (ParseException ex) {
-                    Logger.getLogger(MetricasView.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(MetricasController.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 
                 series1.set(data, val.getValor());
@@ -294,17 +308,6 @@ public class MetricasController implements Serializable {
         this.valores = valores;
     }
 
-    public TreeNode getArvoreProjeto() {
-        if(arvoreProjeto == null){
-            setArvoreProjeto(dao.arvoreProjeto(this.projeto));
-        }
-        return arvoreProjeto;
-    }
-
-    public void setArvoreProjeto(TreeNode arvoreProjeto) {
-        this.arvoreProjeto = arvoreProjeto;
-    }
-    
     public void viewDocumento(Document doc) { 
         this.selectedDocument = doc;
     }
@@ -315,5 +318,9 @@ public class MetricasController implements Serializable {
  
     public void setSelectedDocument(Document selectedDocument) {
         this.selectedDocument = selectedDocument;
+    }
+    
+    public void setService(DocumentService service) {
+        this.service = service;
     }
 }
