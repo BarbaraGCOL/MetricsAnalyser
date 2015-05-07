@@ -10,7 +10,6 @@ import static br.com.pucminas.debt.pattern.DesignPatterns.SUFIXO_PROJETO;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.CascadeType.PERSIST;
 import javax.persistence.Column;
 import javax.persistence.Entity;

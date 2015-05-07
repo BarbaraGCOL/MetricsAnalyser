@@ -9,7 +9,7 @@
                 xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">  
 
     <ui:define name="cabecalho">
-        <span><a><p:outputLabel value="#{msg['projeto']} #{projetoController.projetoSelecionado.nome}"/></a></span> 
+        <span><a><p:outputLabel value="#{msg['projeto']} #{projetoController.projetoSelecionado.nome} (#{metricasController.file})"/></a></span> 
     </ui:define>
     <ui:define name="content">
         <p:panelGrid id="panel" styleClass="semBorda" columns="3" style="width: 800px;">

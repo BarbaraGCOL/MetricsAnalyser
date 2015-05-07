@@ -51,7 +51,7 @@ public class MetricasController implements Serializable {
     private Projeto projeto;
     private Map<String, Set<String>>pacotesProj = new HashMap<>();
     private Map<String, Set<String>>classesProj = new HashMap<>();
-    ProjetoDAO dao = new ProjetoDAOImpl();
+    private ProjetoDAO dao = new ProjetoDAOImpl();
 
     private Map<String, String> metricas = new HashMap<>();
     private Map<String, Float> valoresMetricas = new HashMap<>();
@@ -88,7 +88,7 @@ public class MetricasController implements Serializable {
     
     public TreeNode estruturaArvoreProjeto(Projeto projeto){
         if(arvoreProjeto == null || this.projeto == null || this.projeto.getId() != projeto.getId()){
-            this.arvoreProjeto = service.createDocuments(projeto);
+            this.arvoreProjeto = service.arvore(projeto);
         }
         return this.arvoreProjeto;
     }
@@ -122,6 +122,18 @@ public class MetricasController implements Serializable {
         }
         this.file = this.selectedNode.getLabel();
         getModelFile();
+    }
+    
+    public void onSelectedSingle(TreeNode selectedNode) {
+        if(selectedNode != null) {
+            try { 
+                FacesContext.getCurrentInstance().getExternalContext().redirect("metricas.jsf");
+            } catch (IOException ex) {
+                Logger.getLogger(MetricasController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            this.file = selectedNode.getData().toString();
+            getModelFile();
+        }
     }
     
     public TagCloudModel getModelFile() {

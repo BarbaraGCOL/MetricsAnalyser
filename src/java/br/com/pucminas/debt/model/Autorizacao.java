@@ -8,8 +8,6 @@ import javax.persistence.Table;
 
 import static br.com.pucminas.debt.pattern.DesignPatterns.SUFIXO_AUTORIZACAO;
 import java.util.List;
-import javax.persistence.CascadeType;
-import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 
 /**

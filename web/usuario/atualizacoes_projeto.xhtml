@@ -13,49 +13,37 @@
     </ui:define>
     <ui:define name="content">
         <h:form id="form">
-            
-            <h:outputText value="Exibir Estrutura em: "/>    
+            <b>Exibir Estrutura em: 
             <p:selectOneRadio id="opcao"
                 value="#{projetoController.opcao}" required="true"
                 requiredMessage="Opção Requerida">
                 <f:selectItems value="#{projetoController.opcoes}" />
                 <p:ajax update="form" event="change"/> 
             </p:selectOneRadio>
+            </b>
             
-            <h:panelGrid columns="0" rendered="#{projetoController.opcao == 'Tabela'}"
+            <br/>
+            
+            <h:form rendered="#{projetoController.opcao == 'Tabela'}"
                              style="border:none; margin:0 auto; width:750px;">
-                
-                   <p:tree value="#{treeSelectionView.root1}" var="doc"
-                           selectionMode="single"
-                           selection="#{treeSelectionView.selectedNode}">
+                <p:growl id="msgs" showDetail="true" escape="false"/>
+
+                <p:tree styleClass="tree" value="#{treeSelectionView.arvore(projetoController.projetoSelecionado)}" var="doc"
+                        selectionMode="single" selection="#{treeSelectionView.selectedNode}">
                     <p:treeNode expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">
                         <h:outputText value="#{doc.name}"/>
                     </p:treeNode>
-                    <p:treeNode type="document" icon="ui-icon-document">
-                        <h:outputText value="#{doc.name}" />
-                    </p:treeNode>
-                    <p:treeNode type="picture" icon="ui-icon-image">
-                        <h:outputText value="#{doc.name}" />
-                    </p:treeNode>
-                    <p:treeNode type="mp3" icon="ui-icon-video">
-                        <h:outputText value="#{doc.name}" />
-                    </p:treeNode>
+                        
                 </p:tree>
- 
-
-                    <p:dialog id="dialog" header="Document Detail" showEffect="fade" widgetVar="documentDialog" modal="true" resizable="false">
-                        <p:outputPanel id="documentPanel">
-                            <p:panelGrid  columns="2" columnClasses="label,value" rendered="#{not empty ttBasicView.selectedDocument}">
-                                <h:outputLabel for="name" value="Name: " />
-                                <h:outputText id="name" value="#{ttBasicView.selectedDocument.name}" style="font-weight:bold" />
-
-                                <h:outputLabel for="type" value="Type " />
-                                <h:outputText id="type" value="#{ttBasicView.selectedDocument.type}" style="font-weight:bold" />
-                            </p:panelGrid>
-                        </p:outputPanel>
-                    </p:dialog>
                 
-            </h:panelGrid>
+                <br/>
+                
+                <p:commandButton value="Exibir Métricas" update="msgs" icon="ui-icon-newwin"
+                                 actionListener="#{metricasController.onSelectedSingle(treeSelectionView.selectedNode)}"/>
+                
+                <p:commandButton value="Monitorar" update="msgs" icon="ui-icon-newwin"
+                                 actionListener="#{metricasController.onSelectedSingle(treeSelectionView.selectedNode)}"/>
+            </h:form>   
               
             <h:panelGrid columns="1" rendered="#{projetoController.opcao == 'Árvore'}"
                          style="border:none;margin:0 auto;width:1000px;">
@@ -64,7 +52,7 @@
                         <h:form>
                             <p:growl id="msgs2" showDetail="true"/>
                             <p:mindmap id="map" value="#{metricasController.mapProjeto(projetoController.projetoSelecionado)}" 
-                                       style="width: 770px; height: 600px;">
+                                       styleClass="mindmap">
                                 <p:ajax event="select" listener="#{metricasController.onNodeSelect}" />
                                 <p:ajax event="dblselect" listener="#{metricasController.onNodeDblselect}" update="msgs2" />
                             </p:mindmap>
@@ -72,7 +60,6 @@
                     </p:column>
                 </p:row>
             </h:panelGrid>
-            <f:param name="projeto" value="#{projetoController.projetoSelecionado}" />
         </h:form>
     </ui:define>
 </ui:composition>

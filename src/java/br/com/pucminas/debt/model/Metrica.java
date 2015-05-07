@@ -9,7 +9,6 @@ import static br.com.pucminas.debt.pattern.DesignPatterns.SUFIXO_ATUALIZACAO;
 import static br.com.pucminas.debt.pattern.DesignPatterns.SUFIXO_METRICA;
 import java.io.Serializable;
 import java.util.List;
-import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.CascadeType.PERSIST;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -78,12 +77,4 @@ public class Metrica implements Serializable{
     public void setValores(List<ValorMetrica> valores) {
         this.valores = valores;
     }
-    
-//    public List<Parametro> getParametros() {
-//        return parametros;
-//    }
-//
-//    public void setParametros(List<Parametro> parametros) {
-//        this.parametros = parametros;
-//    }
 }
