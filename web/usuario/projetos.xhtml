@@ -8,23 +8,21 @@
                 template="/templates/template.xhtml">  
 
     <ui:define name="cabecalho">
-        <span><a><p:outputLabel value="#{msg['projeto.titulo.listagem']}"/></a></span> 
+        <span><a><p:outputLabel value="#{msg['projeto.titulo.listagem']} - #{msg['login.usuario']}: #{usuarioController.usuarioLogado.login}"/></a></span> 
     </ui:define>
     <ui:define name="content">
-        <h:form id="form">
+        <center>
+            
+        <h:form id="form" style="width: 600px;">
+                        
             <p:commandButton value="Novo Projeto" update=":form:infosProjeto" oncomplete="PF('projetoDialog').show();" actionListener="#{projetoController.prepararAdicionarProjeto}" styleClass="button-no-border-right" icon="ui-icon-plusthick" title="Adicionar novo Projeto"/>
             <br/><br/>
+            
             <p:dataTable id="tabela" var="projeto" value="#{projetoController.listarProjetos}" 
                          selection="#{projetoController.projeto}" paginator="true" rows="10" widgetVar="tabelaProjetos" 
-                         selectionMode="single" rowKey="#{projeto.nome}" emptyMessage="Projeto não encontrada!">
+                         selectionMode="single" rowKey="#{projeto.nome}" emptyMessage="#{msg['empty.projetos']}">
                 <p:growl id="growl" showDetail="true" sticky="true" /> 
                 <p:ajax event="rowSelect" update=":form:infosProjeto" oncomplete="projetoDialog.show()" />  
-                <p:column filterBy="#{projeto.id}" sortBy="#{projeto.id}" style="text-align: center; white-space:normal !important;">
-                    <f:facet name="header">
-                        <h:outputText value="#{msg['projeto.id']}"/>
-                    </f:facet>
-                    <h:outputText value="#{projeto.id}" />
-                </p:column>
                 <p:column filterBy="#{projeto.nome}" sortBy="#{projeto.nome}" style="text-align: center; white-space:normal !important;">
                     <f:facet name="header">
                         <h:outputText value="#{msg['projeto.nome']}"/>
@@ -44,6 +42,7 @@
                     <p:commandButton icon="ui-icon-bookmark" styleClass="button-no-border-icon" title="Estrutura do Projeto" action="#{projetoController.redirecionaAtualizacoesProjeto}" ajax="false"/>
                 </p:column>
             </p:dataTable>
+            
             <p:dialog header="Lista de Projetos" widgetVar="projetoDialog" resizable="false" showEffect="slide" 
                       hideEffect="slide" draggable="false" modal="true" focus="nome">  
                 <p:growl id="growl2" showDetail="true" sticky="true"/> 
@@ -66,5 +65,6 @@
                 </h:panelGrid>
             </p:dialog>
         </h:form>
+         </center>   
     </ui:define>
 </ui:composition>
