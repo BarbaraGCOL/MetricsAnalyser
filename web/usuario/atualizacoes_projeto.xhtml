@@ -21,21 +21,17 @@
                 <p:ajax update="form" event="change"/> 
             </p:selectOneRadio>
             </b>
-            
             <br/>
             
             <h:form rendered="#{projetoController.opcao == 'Tabela'}"
                              style="border:none; margin:0 auto; width:750px;">
                 <p:growl id="msgs" showDetail="true" escape="false"/>
-
                 <p:tree styleClass="tree" value="#{treeSelectionView.arvore(projetoController.projetoSelecionado)}" var="doc"
                         selectionMode="single" selection="#{treeSelectionView.selectedNode}">
                     <p:treeNode expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">
                         <h:outputText value="#{doc.name}"/>
                     </p:treeNode>
-                        
                 </p:tree>
-                
                 <br/>
                 
                 <p:commandButton value="Exibir Métricas" update="msgs" icon="ui-icon-newwin"
